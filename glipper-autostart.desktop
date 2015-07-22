@@ -4,3 +4,4 @@ Name=Glipper
 Comment=A clipboard history manager
 Exec=glipper
 Type=Application
+OnlyShowIn=GNOME;Unity;MATE;

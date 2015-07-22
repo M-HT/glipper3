@@ -175,7 +175,7 @@ class PluginsWindow(object):
 			
 			PluginsWindow.__instance = None
 		elif response == gtk.RESPONSE_HELP:
-			gtk.show_uri(None, 'ghelp:glipper?plugins', gtk.gdk.CURRENT_TIME)
+			gtk.show_uri(None, 'help:glipper/plugins', gtk.gdk.CURRENT_TIME)
 	
 	def on_preferences_button_clicked(self, widget):
 		treeview, iter = self.plugins_list.get_selection().get_selected()

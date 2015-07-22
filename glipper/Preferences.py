@@ -49,7 +49,6 @@ class Preferences(object):
 			'on_mark_default_entry_toggled': self.on_mark_default_entry_toggled,
 			'on_save_history_check_toggled': self.on_save_history_check_toggled,
 			'on_key_combination_entry_changed': self.on_key_combination_entry_changed,
-			'on_help_button_clicked': self.on_help_button_clicked
 		})
 		
 		self.update_mark_default_entry()
@@ -121,6 +120,5 @@ class Preferences(object):
 			glipper.GCONF_CLIENT.notify_remove(self.save_history_notify)
 			glipper.GCONF_CLIENT.notify_remove(self.key_combination_notify)
 			Preferences.__instance = None
-	
-	def on_help_button_clicked(self, button):
-		gtk.show_uri(None, 'ghelp:glipper?preferences', gtk.gdk.CURRENT_TIME)
+		elif response == gtk.RESPONSE_HELP:
+			gtk.show_uri(None, 'help:glipper/preferences', gtk.gdk.CURRENT_TIME)

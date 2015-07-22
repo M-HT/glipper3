@@ -116,7 +116,7 @@ class AppIndicator(object):
 		self.menu.append(gtk.SeparatorMenuItem())
 		self.menu.append(preferences_item)
 		# uncomment when installing of help files works correctly
-		#self.menu.append(help_item)
+		self.menu.append(help_item)
 		self.menu.append(about_item)
 		self.menu.append(plugins_item)
 		
@@ -126,7 +126,7 @@ class AppIndicator(object):
 		glipper.Preferences.Preferences()
 		
 	def on_help (self, component):
-		gtk.show_uri(None, 'ghelp:glipper', gtk.gdk.CURRENT_TIME)
+		gtk.show_uri(None, 'help:glipper', gtk.gdk.CURRENT_TIME)
 	
 	def on_about (self, component):
 		glipper.About.About()
