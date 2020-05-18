@@ -2,7 +2,9 @@ import os, sys
 from os.path import join, exists, isdir, isfile, dirname, abspath, expanduser
 
 import xdg.BaseDirectory
-import gtk, gtk.gdk, gconf
+import gi, gtk, gtk.gdk
+gi.require_version('GConf', '2.0')
+from gi.repository import GConf
 
 # Autotools set the actual data_dir in defs.py
 from defs import VERSION, DATA_DIR
@@ -12,7 +14,7 @@ UNINSTALLED_GLIPPER = False
 if '_GLIPPER_UNINSTALLED' in os.environ:
 	UNINSTALLED_GLIPPER = True
 	print "Running glipper uninstalled"
-	
+
 # Sets SHARED_DATA_DIR to local copy, or the system location
 # Shared data dir is most the time /usr/share/glipper
 if UNINSTALLED_GLIPPER:
@@ -44,7 +46,7 @@ if exists(expanduser("~/.glipper")) and not xdg_dir_existed:
 	try:
 		os.rename(expanduser("~/.glipper"), USER_GLIPPER_DIR)
 	except OSError:
-		# folder must already have some files in it 
+		# folder must already have some files in it
 		# (race condition with xdg_dir_existed check)
 		pass
 
@@ -66,7 +68,7 @@ HISTORY_FILE = join(USER_GLIPPER_DIR, "history")
 MAX_TOOLTIPS_LENGTH = 11347
 
 #Gconf client
-GCONF_CLIENT = gconf.client_get_default()
+GCONF_CLIENT = GConf.Client.get_default()
 
 # GConf directory for deskbar in window mode and shared settings
 GCONF_DIR = "/apps/glipper"
@@ -94,8 +96,8 @@ GCONF_SAVE_HISTORY = GCONF_DIR + "/save_history"
 
 GCONF_AUTOSTART_PLUGINS = GCONF_DIR + "/autostart_plugins"
 
-# Preload gconf directories
-GCONF_CLIENT.add_dir(GCONF_DIR, gconf.CLIENT_PRELOAD_RECURSIVE)
+# Preload GConf directories
+GCONF_CLIENT.add_dir(GCONF_DIR, GConf.ClientPreloadType.PRELOAD_RECURSIVE)
 
 # Functions callable by plugins
 

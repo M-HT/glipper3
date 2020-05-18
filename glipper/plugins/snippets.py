@@ -1,4 +1,4 @@
-import glipper, os, os.path, gconf
+import glipper, os, os.path
 
 from gettext import gettext as _
 
@@ -40,11 +40,11 @@ class Manager:
 			self.history_model.append ([item])
 			index = index + 1
 			item = glipper.get_history_item(index)
-	
+
 	def __init__(self, parent):
 		builder_file = gtk.Builder()
 		builder_file.add_from_file(os.path.join(os.path.dirname(__file__), "snippets.ui"))
-		
+
 		self.manager = builder_file.get_object("manager")
 		self.manager.show_all()
 		self.history_model = gtk.ListStore (str)
@@ -64,12 +64,12 @@ class Manager:
 		self.snippets_selection = self.snippets_tree.get_selection()
 		self.snippets_selection.set_mode (gtk.SELECTION_SINGLE)
 		self.update_history_model()
-		
+
 		for item in snippets:
 			self.snippets_model.append([item])
-		
+
 		self.manager.set_transient_for(parent)
-		
+
 		builder_file.connect_signals({
 			'on_manager_response': self.on_manager_response,
 			'on_add_button_clicked': self.on_add_button_clicked,
@@ -82,7 +82,7 @@ class Manager:
 			window.destroy()
 		if response == 1:
 			self.update_history_model()
-	
+
 	def on_add_button_clicked(self, widget):
 		self.history_model, iter = self.history_selection.get_selected()
 		if iter:
@@ -99,7 +99,7 @@ class Manager:
 			self.snippets_model.remove(iter)
 			save_snippets()
 			update_menu()
-	
+
 	def on_refresh_button_clicked(self, widget):
 		pass
 
@@ -124,7 +124,7 @@ def update_menu():
 	global menu
 	menu.destroy()
 	menu = gtk.Menu()
-	
+
 	if len(snippets) == 0:
 		menu.append(gtk.MenuItem(_("No snippets available")))
 	else:
@@ -134,7 +134,7 @@ def update_menu():
 				item.set_tooltip_text(snippet)
 			item.connect('activate', on_activate, snippet)
 			menu.append(item)
-	
+
 	menu.show_all()
 	menu_item.set_submenu(menu)
 

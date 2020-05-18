@@ -1,6 +1,9 @@
 import os
 from os.path import *
-import gtk, gconf, gobject
+import gi
+gi.require_version('GConf', '2.0')
+from gi.repository import GObject, GConf
+import gtk
 from gettext import gettext as _
 
 import glipper, glipper.About, glipper.Preferences
@@ -15,14 +18,14 @@ class StatusIcon:
 		self.status_icon.set_visible(True)
 		self.status_icon.connect('popup-menu', self.on_status_icon_popup_menu)
 		self.status_icon.connect('button-press-event', self.on_status_icon_button_press)
-		
+
 	def on_status_icon_button_press(self, status_icon, event):
 		self.menu.popup(None, None, gtk.status_icon_position_menu, event.button, event.time, status_icon)
-	
+
 	def on_status_icon_popup_menu(self, status_icon, button_num, activate_time):
 		# this will call gtk.status_icon_position_menu(menu, status_icon) before displaying the menu
 		self.menu.popup(None, None, gtk.status_icon_position_menu, button_num, activate_time, status_icon)
-		
+
 	def set_menu(self, menu):
 		self.menu = menu
 
@@ -31,7 +34,7 @@ class AppIndicator(object):
 		self.menu = gtk.Menu()
 		self._app_indicator = None
 		self._status_icon = None
-		
+
 		try:
 			import appindicator
 		except ImportError:
@@ -44,9 +47,9 @@ class AppIndicator(object):
 
 		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a: self.update_menu(get_glipper_history().get_history()))
 		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a: self.update_menu(get_glipper_history().get_history()))
-		
+
 		gtk.window_set_default_icon_name("glipper")
-		
+
 		get_glipper_keybinder().connect('activated', self.on_key_combination_press)
 		get_glipper_keybinder().connect('changed', self.on_key_combination_changed)
 		get_glipper_history().connect('changed', self.on_history_changed)
@@ -56,20 +59,20 @@ class AppIndicator(object):
 
 	def on_plugins_menu_items_changed(self, manager):
 		self.update_menu(get_glipper_history().get_history())
-	
+
 	def on_menu_item_activate(self, menuitem, item):
 		get_glipper_clipboards().set_text(item)
-		
+
 	def on_clear(self, menuitem):
 		get_glipper_history().clear()
 		get_glipper_clipboards().clear_text()
-	
+
 	def update_menu(self, history):
 		plugins_menu_items = get_glipper_plugins_manager().get_menu_items()
-		
+
 		for c in self.menu.get_children():
 			self.menu.remove(c)
-			
+
 		if len(history) == 0:
 			menu_item = gtk.ImageMenuItem(gtk.STOCK_STOP)
 			menu_item.get_child().set_markup(_('<i>Empty history</i>'))
@@ -84,26 +87,26 @@ class AppIndicator(object):
 					menu_item.set_tooltip_text(item[:glipper.MAX_TOOLTIPS_LENGTH])
 
 				if mark_default_entry and item == get_glipper_clipboards().get_default_clipboard_text():
-					menu_item.get_child().set_markup('<b>' + gobject.markup_escape_text(menu_item.get_child().get_text()) + '</b>')
+					menu_item.get_child().set_markup('<b>' + GObject.markup_escape_text(menu_item.get_child().get_text()) + '</b>')
 					menu_item.set_property('active', True)
 				else:
 					menu_item.set_property('active', False)
-					
+
 				menu_item.connect('activate', self.on_menu_item_activate, item)
 				self.menu.append(menu_item)
-		
+
 		self.menu.append(gtk.SeparatorMenuItem())
-		
+
 		clear_item = gtk.ImageMenuItem(gtk.STOCK_CLEAR)
 		clear_item.connect('activate', self.on_clear)
 		self.menu.append(clear_item)
-		
+
 		if len(plugins_menu_items) > 0:
 			self.menu.append(gtk.SeparatorMenuItem())
-			
+
 			for module, menu_item in plugins_menu_items:
 				self.menu.append(menu_item)
-				
+
 		preferences_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
 		preferences_item.connect('activate', self.on_preferences)
 		help_item = gtk.ImageMenuItem(gtk.STOCK_HELP)
@@ -112,35 +115,35 @@ class AppIndicator(object):
 		about_item.connect('activate', self.on_about)
 		plugins_item = gtk.MenuItem(_("Pl_ugins"), True)
 		plugins_item.connect('activate', self.on_plugins)
-		
+
 		self.menu.append(gtk.SeparatorMenuItem())
 		self.menu.append(preferences_item)
 		# uncomment when installing of help files works correctly
 		self.menu.append(help_item)
 		self.menu.append(about_item)
 		self.menu.append(plugins_item)
-		
+
 		self.menu.show_all()
 
 	def on_preferences (self, component):
 		glipper.Preferences.Preferences()
-		
+
 	def on_help (self, component):
 		gtk.show_uri(None, 'help:glipper', gtk.gdk.CURRENT_TIME)
-	
+
 	def on_about (self, component):
 		glipper.About.About()
-	
+
 	def on_plugins (self, component):
 		PluginsWindow()
-	
+
 	def on_key_combination_press(self, widget, time):
 		self.menu.popup(None, None, None, 1, gtk.get_current_event_time())
-	
+
 	def on_key_combination_changed(self, keybinder, success):
 		if success:
 			pass # update key combination tooltip when applicable
-			
+
 	def on_history_changed(self, history, history_list):
 		self.update_menu(history_list)
 		get_glipper_plugins_manager().call('on_history_changed')
@@ -166,19 +169,19 @@ glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a
 
 def on_mark_default_entry_changed(value):
 	global mark_default_entry
-	if value is None or value.type != gconf.VALUE_BOOL:
+	if value is None or value.type != GConf.ValueType.BOOL:
 		return
 	mark_default_entry = value.get_bool()
 
 def on_save_history_changed(value):
 	global save_history
-	if value is None or value.type != gconf.VALUE_BOOL:
+	if value is None or value.type != GConf.ValueType.BOOL:
 		return
 	save_history = value.get_bool()
 
 def on_max_item_length_changed (value):
 	global max_item_length
-	if value is None or value.type != gconf.VALUE_INT:
+	if value is None or value.type != GConf.ValueType.INT:
 		return
 	max_item_length = value.get_int()
 
