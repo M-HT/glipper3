@@ -17,6 +17,7 @@ class StatusIcon:
 		self.status_icon = Gtk.StatusIcon()
 		self.status_icon.set_from_icon_name("glipper")
 		self.status_icon.set_visible(True)
+		self.status_icon.set_tooltip_text("Glipper")
 		self.status_icon.connect('popup-menu', self.on_status_icon_popup_menu)
 		self.status_icon.connect('button-press-event', self.on_status_icon_button_press)
 
@@ -37,14 +38,16 @@ class AppIndicator(object):
 		self._status_icon = None
 
 		try:
-			import appindicator
-		except ImportError:
+			gi.require_version('AppIndicator3', '0.1')
+			from gi.repository import AppIndicator3
+		except ValueError, ImportError:
 			self._status_icon = StatusIcon()
 			self._status_icon.set_menu(self.menu)
 		else:
-			self._app_indicator = appindicator.Indicator("glipper", "glipper", appindicator.CATEGORY_APPLICATION_STATUS)
-			self._app_indicator.set_status(appindicator.STATUS_ACTIVE)
+			self._app_indicator = AppIndicator3.Indicator.new("glipper", "glipper", AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
+			self._app_indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
 			self._app_indicator.set_menu(self.menu)
+			self._app_indicator.set_title("Glipper")
 
 		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a=None: self.update_menu(get_glipper_history().get_history()))
 		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a=None: self.update_menu(get_glipper_history().get_history()))
@@ -139,7 +142,7 @@ class AppIndicator(object):
 		PluginsWindow()
 
 	def on_key_combination_press(self, widget, time):
-		# todo: this doesn't work in gtk3 with StatusIcon
+		# todo: this doesn't work in gtk3
 		self.menu.popup(None, None, None, None, 1, Gtk.get_current_event_time())
 
 	def on_key_combination_changed(self, keybinder, success):
