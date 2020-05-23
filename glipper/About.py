@@ -1,30 +1,35 @@
 # coding=UTF-8
 from gettext import gettext as _
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+#gi.require_version('Gdk', '3.0')
+#from gi.repository import Gdk
+from gi.repository import Gtk
 import glipper
 
 
-def on_email(about, mail):
-	gtk.show_uri(None, "mailto:%s" % mail, gtk.gdk.CURRENT_TIME)
+#def on_email(about, mail):
+#	Gtk.show_uri(None, "mailto:%s" % mail, Gdk.CURRENT_TIME)
 
-def on_url(about, link):
-	gtk.show_uri(None, link, gtk.gdk.CURRENT_TIME)
+#def on_url(about, link):
+#	Gtk.show_uri(None, link, Gdk.CURRENT_TIME)
 
-gtk.about_dialog_set_email_hook(on_email)
-gtk.about_dialog_set_url_hook(on_url)
+# todo: is this needed ?
+#Gtk.about_dialog_set_email_hook(on_email)
+#Gtk.about_dialog_set_url_hook(on_url)
 
 class About(object):
 	__instance = None
-	
+
 	def __init__(self):
 		if About.__instance == None:
 			About.__instance = self
 		else:
 			About.__instance.about.present()
 			return
-			
-		self.about = gtk.AboutDialog()
-	
+
+		self.about = Gtk.AboutDialog()
+
 		infos = {
 			"name" : _("Glipper"),
 			"logo-icon-name" : "glipper",
@@ -41,16 +46,18 @@ class About(object):
 		                        "Eugenio Depalo <eugeniodepalo@mac.com>",
 		                        "Karderio <karderio@gmail.com>",
 		                        "Laszlo Pandy <laszlok2@gmail.com>"])
-	
+
 		#translators: These appear in the About dialog, usual format applies.
 		self.about.set_translator_credits( _("translator-credits") )
-	
+
+		self.about.set_license_type(Gtk.License.GPL_2_0_ONLY)
+
 		for prop, val in infos.items():
 			self.about.set_property(prop, val)
-	
+
 		self.about.connect("response", self.destroy)
 		self.about.show_all()
-		
+
 	def destroy(self, dialog, response):
 		dialog.destroy()
 		About.__instance = None

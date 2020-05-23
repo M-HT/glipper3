@@ -1,9 +1,10 @@
 import os
 from os.path import *
 import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 gi.require_version('GConf', '2.0')
-from gi.repository import GObject, GConf
-import gtk
+from gi.repository import GObject, Gtk, Gdk, GConf
 from gettext import gettext as _
 
 import glipper, glipper.About, glipper.Preferences
@@ -13,25 +14,25 @@ from glipper.PluginsManager import *
 
 class StatusIcon:
 	def __init__(self):
-		self.status_icon = gtk.StatusIcon()
+		self.status_icon = Gtk.StatusIcon()
 		self.status_icon.set_from_icon_name("glipper")
 		self.status_icon.set_visible(True)
 		self.status_icon.connect('popup-menu', self.on_status_icon_popup_menu)
 		self.status_icon.connect('button-press-event', self.on_status_icon_button_press)
 
 	def on_status_icon_button_press(self, status_icon, event):
-		self.menu.popup(None, None, gtk.status_icon_position_menu, event.button, event.time, status_icon)
+		self.menu.popup(None, None, Gtk.StatusIcon.position_menu, status_icon, event.button, event.time)
 
 	def on_status_icon_popup_menu(self, status_icon, button_num, activate_time):
-		# this will call gtk.status_icon_position_menu(menu, status_icon) before displaying the menu
-		self.menu.popup(None, None, gtk.status_icon_position_menu, button_num, activate_time, status_icon)
+		# this will call Gtk.StatusIcon.position_menu(menu, status_icon) before displaying the menu
+		self.menu.popup(None, None, Gtk.StatusIcon.position_menu, status_icon, button_num, activate_time)
 
 	def set_menu(self, menu):
 		self.menu = menu
 
 class AppIndicator(object):
 	def __init__(self):
-		self.menu = gtk.Menu()
+		self.menu = Gtk.Menu()
 		self._app_indicator = None
 		self._status_icon = None
 
@@ -45,10 +46,10 @@ class AppIndicator(object):
 			self._app_indicator.set_status(appindicator.STATUS_ACTIVE)
 			self._app_indicator.set_menu(self.menu)
 
-		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a: self.update_menu(get_glipper_history().get_history()))
-		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a: self.update_menu(get_glipper_history().get_history()))
+		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a=None: self.update_menu(get_glipper_history().get_history()))
+		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a=None: self.update_menu(get_glipper_history().get_history()))
 
-		gtk.window_set_default_icon_name("glipper")
+		Gtk.Window.set_default_icon_name("glipper")
 
 		get_glipper_keybinder().connect('activated', self.on_key_combination_press)
 		get_glipper_keybinder().connect('changed', self.on_key_combination_changed)
@@ -74,13 +75,13 @@ class AppIndicator(object):
 			self.menu.remove(c)
 
 		if len(history) == 0:
-			menu_item = gtk.ImageMenuItem(gtk.STOCK_STOP)
+			menu_item = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_STOP)
 			menu_item.get_child().set_markup(_('<i>Empty history</i>'))
 			menu_item.set_sensitive(False)
 			self.menu.append(menu_item)
 		else:
 			for item in history:
-				menu_item = gtk.CheckMenuItem(format_item(item), False)
+				menu_item = Gtk.CheckMenuItem.new_with_label(format_item(item))
 				menu_item.set_property('draw-as-radio', True)
 
 				if len(item) > max_item_length :
@@ -95,28 +96,28 @@ class AppIndicator(object):
 				menu_item.connect('activate', self.on_menu_item_activate, item)
 				self.menu.append(menu_item)
 
-		self.menu.append(gtk.SeparatorMenuItem())
+		self.menu.append(Gtk.SeparatorMenuItem())
 
-		clear_item = gtk.ImageMenuItem(gtk.STOCK_CLEAR)
+		clear_item = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_CLEAR)
 		clear_item.connect('activate', self.on_clear)
 		self.menu.append(clear_item)
 
 		if len(plugins_menu_items) > 0:
-			self.menu.append(gtk.SeparatorMenuItem())
+			self.menu.append(Gtk.SeparatorMenuItem())
 
 			for module, menu_item in plugins_menu_items:
 				self.menu.append(menu_item)
 
-		preferences_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
+		preferences_item = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_PREFERENCES)
 		preferences_item.connect('activate', self.on_preferences)
-		help_item = gtk.ImageMenuItem(gtk.STOCK_HELP)
+		help_item = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_HELP)
 		help_item.connect('activate', self.on_help)
-		about_item = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
+		about_item = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_ABOUT)
 		about_item.connect('activate', self.on_about)
-		plugins_item = gtk.MenuItem(_("Pl_ugins"), True)
+		plugins_item = Gtk.MenuItem.new_with_mnemonic(_("Pl_ugins"))
 		plugins_item.connect('activate', self.on_plugins)
 
-		self.menu.append(gtk.SeparatorMenuItem())
+		self.menu.append(Gtk.SeparatorMenuItem())
 		self.menu.append(preferences_item)
 		# uncomment when installing of help files works correctly
 		self.menu.append(help_item)
@@ -129,7 +130,7 @@ class AppIndicator(object):
 		glipper.Preferences.Preferences()
 
 	def on_help (self, component):
-		gtk.show_uri(None, 'help:glipper', gtk.gdk.CURRENT_TIME)
+		Gtk.show_uri(None, 'help:glipper', Gdk.CURRENT_TIME)
 
 	def on_about (self, component):
 		glipper.About.About()
@@ -138,7 +139,8 @@ class AppIndicator(object):
 		PluginsWindow()
 
 	def on_key_combination_press(self, widget, time):
-		self.menu.popup(None, None, None, 1, gtk.get_current_event_time())
+		# todo: this doesn't work in gtk3 with StatusIcon
+		self.menu.popup(None, None, None, None, 1, Gtk.get_current_event_time())
 
 	def on_key_combination_changed(self, keybinder, success):
 		if success:
@@ -155,17 +157,17 @@ class AppIndicator(object):
 mark_default_entry = glipper.GCONF_CLIENT.get_bool(glipper.GCONF_MARK_DEFAULT_ENTRY)
 if mark_default_entry == None:
 	mark_default_entry = True
-glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a: on_mark_default_entry_changed (z.value))
+glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a=None: on_mark_default_entry_changed (z.value))
 
 save_history = glipper.GCONF_CLIENT.get_bool(glipper.GCONF_SAVE_HISTORY)
 if save_history == None:
 	save_history = True
-glipper.GCONF_CLIENT.notify_add(glipper.GCONF_SAVE_HISTORY, lambda x, y, z, a: on_save_history_changed (z.value))
+glipper.GCONF_CLIENT.notify_add(glipper.GCONF_SAVE_HISTORY, lambda x, y, z, a=None: on_save_history_changed (z.value))
 
 max_item_length = glipper.GCONF_CLIENT.get_int(glipper.GCONF_MAX_ITEM_LENGTH)
 if max_item_length == None:
 	max_elements = 35
-glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a: on_max_item_length_changed (z.value))
+glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a=None: on_max_item_length_changed (z.value))
 
 def on_mark_default_entry_changed(value):
 	global mark_default_entry

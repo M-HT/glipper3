@@ -136,12 +136,12 @@ class StringListener(threading.Thread):
 			except socket.error:
 				self.quit()
 				return
-				
+
 			global inserting
 			inserting = True
 			glipper.add_history_item(item)
 			inserting = False
-		
+
 #listens for incoming connections (like a server does):
 class ServerListener(threading.Thread):
 	def __init__(self, acceptIPs):
@@ -153,7 +153,7 @@ class ServerListener(threading.Thread):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.bind(('', GLIPPERPORT))
 		s.setblocking(False)
-		
+
 		while running:
 			time.sleep(0.1)
 			try:
@@ -172,19 +172,19 @@ class ServerListener(threading.Thread):
 					raise socket.error()
 			except socket.error:
 				continue
-				
+
 			listener = StringListener(conn, password, False)
 			listener.setDaemon(1)
 			listener.start()
 		print "stop listening for incoming connections!"
 		s.close()
-		
+
 def stop():
 	for c in allConnections:
 		c.quit()
 	global running
 	running = False
-	
+
 def init():
 	#read configfile:
 	f = confFile("r")
@@ -210,7 +210,7 @@ def init():
 	server = ServerListener(acceptIPs)
 	server.setDaemon(1)
 	server.start()
-	
+
 def on_show_preferences(parent):
 	preferences(parent).show()
 
@@ -236,14 +236,14 @@ class confFile:
 				IP = line[:-1]
 				line = self.file.readline()
 				password = line[:-1]
-				self.accept.append((IP, password))	
+				self.accept.append((IP, password))
 				line = self.file.readline()
 			line = self.file.readline()
 			while line != "":
 				IP = line[:-1]
 				line = self.file.readline()
 				password = line[:-1]
-				self.connect.append((IP, password))	
+				self.connect.append((IP, password))
 				line = self.file.readline()
 
 	def setAcceptIPs(self, ips):
@@ -271,11 +271,13 @@ class confFile:
 
 #preferences dialog:
 
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
 class preferences:
 	def __init__(self, parent):
-		builder_file = gtk.Builder()
+		builder_file = Gtk.Builder()
 		builder_file.add_from_file(os.path.join(os.path.dirname(__file__), "network.ui"))
 		self.prefWind = builder_file.get_object("preferences")
 		self.prefWind.set_transient_for(parent)
@@ -283,23 +285,23 @@ class preferences:
 
 		#Acception List:
 		self.acceptList = builder_file.get_object("acceptList")
-		self.acceptStore = gtk.ListStore(str, str)
+		self.acceptStore = Gtk.ListStore(str, str)
 		self.acceptList.set_model(self.acceptStore)
-		renderer = gtk.CellRendererText()
-		column = gtk.TreeViewColumn("IP", renderer, text=0)
-		self.acceptList.append_column(column) 
-		column = gtk.TreeViewColumn(_("Password"), renderer, text=1)
-		self.acceptList.append_column(column) 
+		renderer = Gtk.CellRendererText()
+		column = Gtk.TreeViewColumn("IP", renderer, text=0)
+		self.acceptList.append_column(column)
+		column = Gtk.TreeViewColumn(_("Password"), renderer, text=1)
+		self.acceptList.append_column(column)
 
 		#Connection List:
 		self.connectList = builder_file.get_object("connectList")
-		self.connectStore = gtk.ListStore(str, str)
+		self.connectStore = Gtk.ListStore(str, str)
 		self.connectList.set_model(self.connectStore)
-		renderer = gtk.CellRendererText()
-		column = gtk.TreeViewColumn("IP", renderer, text=0)
-		self.connectList.append_column(column) 
-		column = gtk.TreeViewColumn(_("Password"), renderer, text=1)
-		self.connectList.append_column(column) 
+		renderer = Gtk.CellRendererText()
+		column = Gtk.TreeViewColumn("IP", renderer, text=0)
+		self.connectList.append_column(column)
+		column = Gtk.TreeViewColumn(_("Password"), renderer, text=1)
+		self.connectList.append_column(column)
 
 		builder_file.connect_signals({
 			'on_addAccButton_clicked': self.on_addAccButton_clicked,
@@ -317,37 +319,39 @@ class preferences:
 	def show(self):
 		self.prefWind.show_all()
 		if not cryptAvailable:
-			warning = gtk.MessageDialog(self.prefWind, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, 
+			warning = Gtk.MessageDialog(self.prefWind, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
 				_("You have to install the Python Cryptography Toolkit (python-crypto) if you want to use encrypted connections!"))
 			warning.run()
 			warning.destroy()
 
 	def askIP(self):
-		dialog = gtk.Dialog(_("New connection"), self.prefWind, 
-				gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-				(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-				 gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+		dialog = Gtk.Dialog(_("New connection"), self.prefWind,
+				Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+				(Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
+				 Gtk.STOCK_OK, Gtk.ResponseType.ACCEPT))
 		dialog.set_default_size (350, 150)
-		info = gtk.Label(_("Enter IP address: "))
-		dialog.vbox.pack_start(info)
+		info = Gtk.Label(_("Enter IP address: "))
+		dialog.vbox.pack_start(info, True, True, 0)
 		info.show()
-		entry = gtk.Entry()
-		dialog.vbox.pack_start(entry)
+		entry = Gtk.Entry()
+		dialog.vbox.pack_start(entry, True, True, 0)
 		entry.show()
-		passInfo = gtk.Label(_("Enter Password for this Connection: "))
-		dialog.vbox.pack_start(passInfo)
+		passInfo = Gtk.Label(_("Enter Password for this Connection: "))
+		dialog.vbox.pack_start(passInfo, True, True, 0)
 		passInfo.show()
-		passEntry = gtk.Entry()
-		dialog.vbox.pack_start(passEntry)
+		passEntry = Gtk.Entry()
+		dialog.vbox.pack_start(passEntry, True, True, 0)
 		passEntry.show()
 		res = dialog.run()
+		entryText = entry.get_text()
+		passEntryText = passEntry.get_text()
 		dialog.destroy()
-		if (res == gtk.RESPONSE_REJECT) or (entry.get_text() == ""):
+		if (res == Gtk.ResponseType.REJECT) or (entryText == ""):
 			return None
-		if res == gtk.RESPONSE_ACCEPT:
-			if len(passEntry.get_text()) > 32:
+		if res == Gtk.ResponseType.ACCEPT:
+			if len(passEntryText) > 32:
 				return None		# TODO: Show an error message
-			return (entry.get_text(), passEntry.get_text())
+			return (entryText, passEntryText)
 
 	def addIPToList(self, store):
 		result = self.askIP()
@@ -389,7 +393,7 @@ class preferences:
 		self.addIPToList(self.connectStore)
 
 	def on_prefWind_response(self, widget, response):
-		if response == gtk.RESPONSE_DELETE_EVENT or response == gtk.RESPONSE_CLOSE:
+		if response == Gtk.ResponseType.DELETE_EVENT or response == Gtk.ResponseType.CLOSE:
 			f = confFile("w")
 			f.setAcceptIPs(self.getStringListFromStore(self.acceptStore))
 			f.setConnectIPs(self.getStringListFromStore(self.connectStore))

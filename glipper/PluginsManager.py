@@ -1,8 +1,10 @@
 import gi
-gi.require_version('GConf', '2.0')
 gi.require_version('Gio', '2.0')
-from gi.repository import GObject, GConf, Gio
-import gtk, glipper
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+gi.require_version('GConf', '2.0')
+from gi.repository import GObject, Gio, Gtk, Gdk, GConf
+import glipper
 from gettext import gettext as _
 from os.path import *
 from glipper.Plugin import *
@@ -30,7 +32,7 @@ class PluginsManager(GObject.GObject):
 
 		if self.autostart_plugins == None:
 			self.autostart_plugins = ['nopaste']
-		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_AUTOSTART_PLUGINS, lambda x, y, z, a: self.on_autostart_plugins_changed (z.value))
+		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_AUTOSTART_PLUGINS, lambda x, y, z, a=None: self.on_autostart_plugins_changed (z.value))
 
 	def on_autostart_plugins_changed(self, value):
 		if value is None or value.type != GConf.ValueType.LIST:
@@ -116,7 +118,7 @@ class PluginsWindow(object):
 			PluginsWindow.__instance.plugins_window.present()
 			return
 
-		builder_file = gtk.Builder()
+		builder_file = Gtk.Builder()
 		builder_file.add_from_file(join(glipper.SHARED_DATA_DIR, "plugins-window.ui"))
 
 		self.FILE_NAME_COLUMN, self.ENABLED_COLUMN, self.AUTOSTART_COLUMN, self.NAME_COLUMN, self.DESCRIPTION_COLUMN, self.PREFERENCES_COLUMN = range(6)
@@ -125,23 +127,23 @@ class PluginsWindow(object):
 		self.plugins_list = builder_file.get_object("plugins_list")
 		self.preferences_button = builder_file.get_object("preferences_button")
 		self.refresh_button = builder_file.get_object("refresh_button")
-		self.plugins_list_model = gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_BOOLEAN, GObject.TYPE_BOOLEAN, GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_BOOLEAN)
+		self.plugins_list_model = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_BOOLEAN, GObject.TYPE_BOOLEAN, GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_BOOLEAN)
 		self.plugins_list.set_model(self.plugins_list_model)
 		self.plugins_list.get_selection().connect('changed', self.on_plugins_list_selection_changed)
 
-		renderer = gtk.CellRendererToggle()
+		renderer = Gtk.CellRendererToggle()
 		renderer.connect('toggled', self.on_enabled_toggled)
-		self.plugins_list.append_column(gtk.TreeViewColumn(_("Enabled"), renderer, active = self.ENABLED_COLUMN))
-		renderer = gtk.CellRendererToggle()
+		self.plugins_list.append_column(Gtk.TreeViewColumn(_("Enabled"), renderer, active = self.ENABLED_COLUMN))
+		renderer = Gtk.CellRendererToggle()
 		renderer.connect('toggled', self.on_autostart_toggled)
-		self.plugins_list.append_column(gtk.TreeViewColumn(_("Autostart"), renderer, active = self.AUTOSTART_COLUMN))
-		self.plugins_list.append_column(gtk.TreeViewColumn(_("Name"), gtk.CellRendererText(), text = self.NAME_COLUMN))
-		self.plugins_list.append_column(gtk.TreeViewColumn(_("Description"), gtk.CellRendererText(), text = self.DESCRIPTION_COLUMN))
+		self.plugins_list.append_column(Gtk.TreeViewColumn(_("Autostart"), renderer, active = self.AUTOSTART_COLUMN))
+		self.plugins_list.append_column(Gtk.TreeViewColumn(_("Name"), Gtk.CellRendererText(), text = self.NAME_COLUMN))
+		self.plugins_list.append_column(Gtk.TreeViewColumn(_("Description"), Gtk.CellRendererText(), text = self.DESCRIPTION_COLUMN))
 
 		self.autostart_plugins = get_list_str(glipper.GCONF_CLIENT.get(glipper.GCONF_AUTOSTART_PLUGINS))
 		if self.autostart_plugins == None:
 			self.autostart_plugins = ['nopaste']
-		self.autostart_plugins_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_AUTOSTART_PLUGINS, lambda x, y, z, a: self.on_autostart_plugins_changed (z.value))
+		self.autostart_plugins_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_AUTOSTART_PLUGINS, lambda x, y, z, a=None: self.on_autostart_plugins_changed (z.value))
 
 		builder_file.connect_signals({
 			'on_plugins_window_response': self.on_plugins_window_response,
@@ -155,7 +157,7 @@ class PluginsWindow(object):
 	def update_plugins_list_model(self):
 		self.plugins_list_model.clear()
 
-		for plugin in get_glipper_plugin_cache():
+		for plugin in sorted(get_glipper_plugin_cache(), key=lambda x: x.get_name().lower()):
 			self.plugins_list_model.append([plugin.get_file_name(),
 			                                plugins_manager.get_started(plugin.get_file_name()),
 			                                plugins_manager.get_autostarted(plugin.get_file_name()),
@@ -181,13 +183,13 @@ class PluginsWindow(object):
 			iter = self.plugins_list_model.iter_next(iter)
 
 	def on_plugins_window_response(self, dialog, response):
-		if response == gtk.RESPONSE_DELETE_EVENT or response == gtk.RESPONSE_CLOSE:
+		if response == Gtk.ResponseType.DELETE_EVENT or response == Gtk.ResponseType.CLOSE:
 			dialog.destroy()
 			glipper.GCONF_CLIENT.notify_remove(self.autostart_plugins_notify)
 
 			PluginsWindow.__instance = None
-		elif response == gtk.RESPONSE_HELP:
-			gtk.show_uri(None, 'help:glipper/plugins', gtk.gdk.CURRENT_TIME)
+		elif response == Gtk.ResponseType.HELP:
+			Gtk.show_uri(None, 'help:glipper/plugins', Gdk.CURRENT_TIME)
 
 	def on_preferences_button_clicked(self, widget):
 		treeview, iter = self.plugins_list.get_selection().get_selected()
@@ -214,7 +216,7 @@ class PluginsWindow(object):
 			self.autostart_plugins.append(file_name)
 
 		self.plugins_list_model.set_value(iter, self.AUTOSTART_COLUMN, plugins_manager.get_autostarted(file_name))
-		# todo: can't be done
+		# todo: this can't be done using introspection
 		#glipper.GCONF_CLIENT.set_list(glipper.GCONF_AUTOSTART_PLUGINS, GConf.ValueType.STRING, self.autostart_plugins)
 
 	def on_enabled_toggled(self, renderer, path):

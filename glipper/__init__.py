@@ -2,9 +2,11 @@ import os, sys
 from os.path import join, exists, isdir, isfile, dirname, abspath, expanduser
 
 import xdg.BaseDirectory
-import gi, gtk, gtk.gdk
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 gi.require_version('GConf', '2.0')
-from gi.repository import GConf
+from gi.repository import Gtk, Gdk, GConf
 
 # Autotools set the actual data_dir in defs.py
 from defs import VERSION, DATA_DIR

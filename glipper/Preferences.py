@@ -1,7 +1,9 @@
 import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 gi.require_version('GConf', '2.0')
-from gi.repository import GConf
-import glipper, gtk
+from gi.repository import Gtk, Gdk, GConf
+import glipper
 from os.path import join
 
 
@@ -15,7 +17,7 @@ class Preferences(object):
 			Preferences.__instance.preferences_window.present()
 			return
 
-		builder_file = gtk.Builder()
+		builder_file = Gtk.Builder()
 		builder_file.add_from_file(join(glipper.SHARED_DATA_DIR, "preferences-window.ui"))
 
 		self.preferences_window = builder_file.get_object("preferences_window")
@@ -37,12 +39,12 @@ class Preferences(object):
 		if key_combo is None: key_combo = ''
 		self.key_combination_entry.set_text(key_combo)
 
-		self.max_elements_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ELEMENTS, lambda x, y, z, a: self.on_max_elements_changed (z.value))
-		self.use_primary_clipboard_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_USE_PRIMARY_CLIPBOARD, lambda x, y, z, a: self.on_use_primary_clipboard_changed (z.value))
-		self.use_default_clipboard_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_USE_DEFAULT_CLIPBOARD, lambda x, y, z, a: self.on_use_default_clipboard_changed (z.value))
-		self.mark_default_entry_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a: self.on_mark_default_entry_changed (z.value))
-		self.save_history_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_SAVE_HISTORY, lambda x, y, z, a: self.on_save_history_changed (z.value))
-		self.key_combination_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_KEY_COMBINATION, lambda x, y, z, a: self.on_key_combination_changed (z.value))
+		self.max_elements_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ELEMENTS, lambda x, y, z, a=None: self.on_max_elements_changed (z.value))
+		self.use_primary_clipboard_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_USE_PRIMARY_CLIPBOARD, lambda x, y, z, a=None: self.on_use_primary_clipboard_changed (z.value))
+		self.use_default_clipboard_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_USE_DEFAULT_CLIPBOARD, lambda x, y, z, a=None: self.on_use_default_clipboard_changed (z.value))
+		self.mark_default_entry_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a=None: self.on_mark_default_entry_changed (z.value))
+		self.save_history_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_SAVE_HISTORY, lambda x, y, z, a=None: self.on_save_history_changed (z.value))
+		self.key_combination_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_KEY_COMBINATION, lambda x, y, z, a=None: self.on_key_combination_changed (z.value))
 
 		builder_file.connect_signals({
 			'on_preferences_window_response': self.on_preferences_window_response,
@@ -114,7 +116,7 @@ class Preferences(object):
 		glipper.GCONF_CLIENT.set_string(glipper.GCONF_KEY_COMBINATION, entry.get_text())
 
 	def on_preferences_window_response(self, dialog, response):
-		if response == gtk.RESPONSE_DELETE_EVENT or response == gtk.RESPONSE_CLOSE:
+		if response == Gtk.ResponseType.DELETE_EVENT or response == Gtk.ResponseType.CLOSE:
 			dialog.destroy()
 			glipper.GCONF_CLIENT.notify_remove(self.max_elements_notify)
 			glipper.GCONF_CLIENT.notify_remove(self.use_default_clipboard_notify)
@@ -123,5 +125,5 @@ class Preferences(object):
 			glipper.GCONF_CLIENT.notify_remove(self.save_history_notify)
 			glipper.GCONF_CLIENT.notify_remove(self.key_combination_notify)
 			Preferences.__instance = None
-		elif response == gtk.RESPONSE_HELP:
-			gtk.show_uri(None, 'help:glipper/preferences', gtk.gdk.CURRENT_TIME)
+		elif response == Gtk.ResponseType.HELP:
+			Gtk.show_uri(None, 'help:glipper/preferences', Gdk.CURRENT_TIME)

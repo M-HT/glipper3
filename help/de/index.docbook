@@ -8,7 +8,7 @@
 <!ENTITY appname "Glipper">
 ]>
 <!-- =============Document Header ============================= -->
-<article id="index" lang="de"> 
+<article id="index" lang="de">
 <!-- please do not change the id; for translations -->
 
 	<articleinfo>
@@ -27,18 +27,18 @@
 		</copyright>
 		-->
 
-		<publisher> 
-			<publishername>Glipper Entwickler</publishername> 
-		</publisher> 
+		<publisher>
+			<publishername>Glipper Entwickler</publishername>
+		</publisher>
 
-		<authorgroup> 
-			<author> 
-				<firstname>Karderio</firstname> 
-				<affiliation> 
-					<orgname>Glipper Entwickler</orgname> 
-					<address> <email>kardeio at gmail dot com</email> </address> 
-				</affiliation> 
-			</author> 
+		<authorgroup>
+			<author>
+				<firstname>Karderio</firstname>
+				<affiliation>
+					<orgname>Glipper Entwickler</orgname>
+					<address> <email>kardeio at gmail dot com</email> </address>
+				</affiliation>
+			</author>
 			<author>
 				<firstname>Sven</firstname>
 				<surname>Rech</surname>
@@ -58,17 +58,17 @@
 			<!-- This is appropriate place for other contributors: translators,
 			      maintainers,  etc. Commented out by default.
 			       <othercredit role="translator">
-				<firstname>Latin</firstname> 
-				<surname>Translator 1</surname> 
-				<affiliation> 
-				  <orgname>Latin Translation Team</orgname> 
-				  <address> <email>translator@gnome.org</email> </address> 
+				<firstname>Latin</firstname>
+				<surname>Translator 1</surname>
+				<affiliation>
+				  <orgname>Latin Translation Team</orgname>
+				  <address> <email>translator@gnome.org</email> </address>
 				</affiliation>
 				<contrib>Latin translation</contrib>
 			      </othercredit>
 			-->
 		</authorgroup>
-	    
+
 		<revhistory>
 			<revision>
 				<revnumber>Glipper Handbuch V1.0</revnumber>
@@ -78,28 +78,28 @@
 					<para role="author">Eugenio Depalo</para>
 				</revdescription>
 			</revision>
-			<revision> 
-				<revnumber>Glipper Handbuch V0.90</revnumber> 
-				<date>2006-06-27</date> 
-				<revdescription> 
+			<revision>
+				<revnumber>Glipper Handbuch V0.90</revnumber>
+				<date>2006-06-27</date>
+				<revdescription>
 					<para role="author">karderio</para>
 					<para role="publisher">Glipper Entwickler</para>
-				</revdescription> 
-			</revision> 
-		</revhistory> 
+				</revdescription>
+			</revision>
+		</revhistory>
 
 		<releaseinfo>Dieses Handbuch beschreibt Version 1.0 von Glipper</releaseinfo>
 
-		<legalnotice> 
-			<title>Feedback</title> 
+		<legalnotice>
+			<title>Feedback</title>
 			<para>Um einen Fehler zu berichten oder einen Vorschlag für bezüglich dem Programm <application>Glipper</application> oder diesem Handbuch zu machen, befolge die Anweisungen auf der <ulink url="http://glipper.sourceforge.net" type="help">Glipper Projektseite</ulink>.</para>
 			<!-- Translators may also add here feedback address for translations -->
-		</legalnotice> 
+		</legalnotice>
 
 	</articleinfo>
 
-	<indexterm zone="index"> 
-		<primary>Glipper</primary> 
+	<indexterm zone="index">
+		<primary>Glipper</primary>
 	</indexterm>
 
  <!-- ============= Document Body ============================= -->
@@ -286,13 +286,13 @@
   		  </listitem>
   		</itemizedlist></para>
 
-    <sect2 id="plugins-actions">    
+    <sect2 id="plugins-actions">
       <title>Aktionen Plugin</title>
       <para>Das <application>Aktionen</application> Plugin erlaubt dir Kommandos zu definieren, welche abgearbeitet werden falls der jetzige Eintrag in der Zwischenablage auf einen regulären Ausdruck passt.</para>
-      <para>Um deine Aktionen zu verwalten, wähle das <applicatin>Aktionen Plugin aus dem Plugindialog und klicke dann auf den Einstellungen Knopf.</applicatin></para> 
+      <para>Um deine Aktionen zu verwalten, wähle das <applicatin>Aktionen Plugin aus dem Plugindialog und klicke dann auf den Einstellungen Knopf.</applicatin></para>
       <sect3>
          <title>Einstellungen</title>
-<table frame="topbot" id="plugins-nopaste-TBL">
+<table frame="topbot" id="plugins-actions-TBL">
         <title>Aktionen Einstellungen</title>
         <tgroup cols="2" colsep="0" rowsep="0">
           <colspec colname="colspec0" colwidth="35.09*"/>
@@ -338,10 +338,10 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-network">    
+    <sect2 id="plugins-network">
       <title>Netzwerk Plugin</title>
       <para>Das <application>Netwerk</application> Plugin verbindet mehrere Glipper Prozesse über das Netwerk um ihre Verläufe zu synchronisieren.</para>
-      <para>Um die IPs, zu denen du verbinden willst, zu setzen, wähle das <application>Netzwerk</application> Plugin aus dem <guilabel>Plugindialog</guilabel> und klicke auf den <guibutton>Einstellungen</guibutton> Knopf.</para> 
+      <para>Um die IPs, zu denen du verbinden willst, zu setzen, wähle das <application>Netzwerk</application> Plugin aus dem <guilabel>Plugindialog</guilabel> und klicke auf den <guibutton>Einstellungen</guibutton> Knopf.</para>
       <sect3>
       <title>Verwalte Verbindungen</title>
       <para>Die Netwerkeinstellungen zeigen zwei Tabellen:</para>
@@ -361,13 +361,13 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-newline">    
+    <sect2 id="plugins-newline">
       <title>Neue Zeile Plugin</title>
       <para>Das <application>Neue Zeile</application> Plugin fügt eine neue Zeile am Ende deiner Zwischenablageneinträge ein.</para>
-      <para>Dies ist nur ein Beispielsplugin.</para> 
+      <para>Dies ist nur ein Beispielsplugin.</para>
     </sect2>
 
-    <sect2 id="plugins-nopaste">    
+    <sect2 id="plugins-nopaste">
       <title>Nopaste plugin</title>
       <para>Das <application>Nopaste</application> Plugin erlaubt dir deine Zwischenablageneinträge einem Nopaste Dienst zu übergeben.</para>
       <para>Ein Nopaste Dienst ist eine Webanwendung welcher dir erlaubt Textschnipsel hochzuladen, oft Teile eine Quellcodes, um sie öffentlich anzuzeigen.</para>
@@ -419,11 +419,11 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-snippets">    
+    <sect2 id="plugins-snippets">
       <title>Schnipsel Plugin</title>
       <para>Das <application>Schnipsel</application> Plugin erlaubt dir Schnipsel von Verlaufseinträgen zu erzeugen.</para>
       <para>Schnipsel sind Textblöcke die du zu verschiedenen Anlässen benutzen kannst.</para>
-      <para>Um deine Schnipsel zu verwalten, wähle das <application>Snippets</application> Plugin aus dem <guilabel>Plugindialog</guilabel> und klicke dann auf den <guibutton>Einstellungen</guibutton> Knopf.</para> 
+      <para>Um deine Schnipsel zu verwalten, wähle das <application>Snippets</application> Plugin aus dem <guilabel>Plugindialog</guilabel> und klicke dann auf den <guibutton>Einstellungen</guibutton> Knopf.</para>
       <sect3>
       <title>Schnipsel verwalten</title>
       <para>Der Schnipselmanager zeigen zwei Tabellen an:</para>
@@ -444,7 +444,7 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-grow">    
+    <sect2 id="plugins-grow">
       <title>Wachsen Plugin</title>
       <para>Das <application>Wachsen</application> Plugin erkennt ob ein neuer Eintrag nur eine gewachsene Version eines Vorherigen ist, und falls dem so ist, wird der Vorherige gelöscht.</para>
     </sect2>

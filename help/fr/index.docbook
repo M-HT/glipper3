@@ -8,7 +8,7 @@
 <!ENTITY appname "Glipper">
 ]>
 <!-- =============Document Header ============================= -->
-<article id="index" lang="fr"> 
+<article id="index" lang="fr">
 <!-- please do not change the id; for translations -->
 
 	<articleinfo>
@@ -27,18 +27,18 @@
 		</copyright>
 		-->
 
-		<publisher> 
-			<publishername>Glipper devs</publishername> 
-		</publisher> 
+		<publisher>
+			<publishername>Glipper devs</publishername>
+		</publisher>
 
-		<authorgroup> 
-			<author> 
-				<firstname>Karderio</firstname> 
-				<affiliation> 
-					<orgname>Glipper dev</orgname> 
-					<address> <email>kardeio at gmail dot com</email> </address> 
-				</affiliation> 
-			</author> 
+		<authorgroup>
+			<author>
+				<firstname>Karderio</firstname>
+				<affiliation>
+					<orgname>Glipper dev</orgname>
+					<address> <email>kardeio at gmail dot com</email> </address>
+				</affiliation>
+			</author>
 			<author>
 				<firstname>Sven</firstname>
 				<surname>Rech</surname>
@@ -58,17 +58,17 @@
 			<!-- This is appropriate place for other contributors: translators,
 			      maintainers,  etc. Commented out by default.
 			       <othercredit role="translator">
-				<firstname>Latin</firstname> 
-				<surname>Translator 1</surname> 
-				<affiliation> 
-				  <orgname>Latin Translation Team</orgname> 
-				  <address> <email>translator@gnome.org</email> </address> 
+				<firstname>Latin</firstname>
+				<surname>Translator 1</surname>
+				<affiliation>
+				  <orgname>Latin Translation Team</orgname>
+				  <address> <email>translator@gnome.org</email> </address>
 				</affiliation>
 				<contrib>Latin translation</contrib>
 			      </othercredit>
 			-->
 		</authorgroup>
-	    
+
 		<revhistory>
 			<revision>
 				<revnumber>Glipper Manual V1.0</revnumber>
@@ -78,31 +78,31 @@
 					<para role="author">Eugenio Depalo</para>
 				</revdescription>
 			</revision>
-			<revision> 
-				<revnumber>Glipper Manual V0.90</revnumber> 
-				<date>2006-06-27</date> 
-				<revdescription> 
+			<revision>
+				<revnumber>Glipper Manual V0.90</revnumber>
+				<date>2006-06-27</date>
+				<revdescription>
 					<para role="author">karderio</para>
 					<para role="publisher">Glipper devs</para>
-				</revdescription> 
-			</revision> 
-		</revhistory> 
+				</revdescription>
+			</revision>
+		</revhistory>
 
 		<releaseinfo>This manual describes version 1.0 of Glipper.</releaseinfo>
 
-		<legalnotice> 
-			<title>Feedback</title> 
+		<legalnotice>
+			<title>Feedback</title>
 			<para>
 				To report a bug or make a suggestion regarding the <application>Glipper</application> application or
-				this manual, follow the directions in the <ulink url="http://glipper.sourceforge.net" type="help">Glipper project page</ulink>. 
+				this manual, follow the directions in the <ulink url="http://glipper.sourceforge.net" type="help">Glipper project page</ulink>.
 			</para>
 			<!-- Translators may also add here feedback address for translations -->
-		</legalnotice> 
+		</legalnotice>
 
 	</articleinfo>
 
-	<indexterm zone="index"> 
-		<primary>Glipper</primary> 
+	<indexterm zone="index">
+		<primary>Glipper</primary>
 	</indexterm>
 
  <!-- ============= Document Body ============================= -->
@@ -117,9 +117,9 @@
 
 	<para>
 		<application>Glipper</application> sits in the panel and collects
-		everything that is copied to the clipboard. <application>Glipper</application> maintains a history both 
+		everything that is copied to the clipboard. <application>Glipper</application> maintains a history both
 		of the "copy" clipboard, usually filled with <keycombo><keycap>Ctrl+C</keycap></keycombo> and of the
-		"select" clipboard, filled when text is selected. 
+		"select" clipboard, filled when text is selected.
 	</para>
 
 	<para>
@@ -129,7 +129,7 @@
 
 	<para>
 		The webpage for <application>Glipper</application> can be found at the
-		<ulink url="http://glipper.sourceforge.net">Glipper project page</ulink>. 
+		<ulink url="http://glipper.sourceforge.net">Glipper project page</ulink>.
 	</para>
  </sect1>
 
@@ -368,13 +368,13 @@
   		</itemizedlist>
     </para>
 
-    <sect2 id="plugins-actions">    
+    <sect2 id="plugins-actions">
       <title>Actions plugin</title>
       <para>The <application>Actions</application> plugin allows you to define commands to run when the current item in the clipboards matches a regular expression.</para>
-      <para>To manage your actions, select the <application>Actions</application> plugin from the <guilabel>Plugin</guilabel> dialog and then click on the <guibutton>Preferences</guibutton> button.</para> 
+      <para>To manage your actions, select the <application>Actions</application> plugin from the <guilabel>Plugin</guilabel> dialog and then click on the <guibutton>Preferences</guibutton> button.</para>
       <sect3>
          <title>Preferences</title>
-<table frame="topbot" id="plugins-nopaste-TBL">
+<table frame="topbot" id="plugins-actions-TBL">
         <title>Actions Preferences</title>
         <tgroup cols="2" colsep="0" rowsep="0">
           <colspec colname="colspec0" colwidth="35.09*"/>
@@ -423,10 +423,10 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-network">    
+    <sect2 id="plugins-network">
       <title>Network plugin</title>
       <para>The <application>Network</application> plugin connects multiple Glipper processes via network to synchronize their history.</para>
-      <para>To set up the IPs you want to connect to, select the <application>Network</application> plugin from the <guilabel>Plugin</guilabel> dialog and then click on the <guibutton>Preferences</guibutton> button.</para> 
+      <para>To set up the IPs you want to connect to, select the <application>Network</application> plugin from the <guilabel>Plugin</guilabel> dialog and then click on the <guibutton>Preferences</guibutton> button.</para>
       <sect3>
       <title>Managing connections</title>
       <para>The <application>Network</application> <guibutton>Preferences</guibutton> displays two tables:</para>
@@ -446,13 +446,13 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-newline">    
+    <sect2 id="plugins-newline">
       <title>Newline plugin</title>
       <para>The <application>Newline</application> plugin adds a newline character at the end of items in the clipboard.</para>
-      <para>This is just an example plugin.</para> 
+      <para>This is just an example plugin.</para>
     </sect2>
 
-    <sect2 id="plugins-nopaste">    
+    <sect2 id="plugins-nopaste">
       <title>Nopaste plugin</title>
       <para>The <application>Nopaste</application> plugin allows you to paste the item in your clipboard to a Nopaste service.</para>
       <para>A Nopaste service is a web application which allows its users to upload snippets of text, usually samples of source code, for public viewing.</para>
@@ -508,11 +508,11 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-snippets">    
+    <sect2 id="plugins-snippets">
       <title>Snippets plugin</title>
       <para>The <application>Snippets</application> plugin allows you to create snippets from history items.</para>
       <para>Snippets are blocks of text that you can use in different occasions.</para>
-      <para>To manage your snippets, select the <application>Snippets</application> plugin from the <guilabel>Plugin</guilabel> dialog and then click on the <guibutton>Preferences</guibutton> button.</para> 
+      <para>To manage your snippets, select the <application>Snippets</application> plugin from the <guilabel>Plugin</guilabel> dialog and then click on the <guibutton>Preferences</guibutton> button.</para>
       <sect3>
       <title>Managing snippets</title>
       <para>The <application>Snippets</application> <guibutton>Manager</guibutton> displays two tables:</para>
@@ -534,7 +534,7 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-grow">    
+    <sect2 id="plugins-grow">
       <title>Grow plugin</title>
       <para>The <application>Grow</application> plugin detects whether a new entry is just a grown version of the previous one, and if so, deletes the previous.</para>
     </sect2>

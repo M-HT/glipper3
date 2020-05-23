@@ -1,9 +1,8 @@
 import gi
-gi.require_version('GConf', '2.0')
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-from gi.repository import GObject, GConf, Gdk
-from gi.repository import Gtk as gtk
+gi.require_version('GConf', '2.0')
+from gi.repository import GObject, Gtk, Gdk, GConf
 import glipper
 
 class Clipboards(GObject.GObject):
@@ -14,10 +13,10 @@ class Clipboards(GObject.GObject):
 
 	def __init__(self):
 		GObject.GObject.__init__(self)
-		self.default_clipboard = Clipboard(gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD),
+		self.default_clipboard = Clipboard(Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD),
 		                                   self.emit_new_item,
 		                                   glipper.GCONF_USE_DEFAULT_CLIPBOARD)
-		self.primary_clipboard = Clipboard(gtk.Clipboard.get(Gdk.SELECTION_PRIMARY),
+		self.primary_clipboard = Clipboard(Gtk.Clipboard.get(Gdk.SELECTION_PRIMARY),
 		                                   self.emit_new_item_selection,
 		                                   glipper.GCONF_USE_PRIMARY_CLIPBOARD)
 
@@ -58,12 +57,12 @@ class Clipboard(object):
 
 	def set_text(self, text):
 		if self.use_clipboard:
-			self.clipboard.set_text(text)
+			self.clipboard.set_text(text, -1)
 			self.clipboard_text = text
 
 	def clear(self):
 		if self.use_clipboard:
-			self.clipboard.set_text('')
+			self.clipboard.set_text('', 0)
 			self.clipboard.clear()
 			self.clipboard_text = None
 
@@ -73,7 +72,7 @@ class Clipboard(object):
 			self.clipboard_text = self.unicode_or_none(clipboard.wait_for_text())
 			self.new_item_callback(self.clipboard_text)
 
-	def on_use_clipboard_changed(self, client, connection_id, entry, user_data):
+	def on_use_clipboard_changed(self, client, connection_id, entry, user_data=None):
 		value = entry.value
 		if value is None or value.type != GConf.ValueType.BOOL:
 			return

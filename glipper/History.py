@@ -1,7 +1,6 @@
 import gi
 gi.require_version('GConf', '2.0')
 from gi.repository import GObject, GConf
-import gtk
 import glipper
 from glipper.Clipboards import *
 from glipper.PluginsManager import *
@@ -20,7 +19,7 @@ class History(GObject.GObject):
 		self.max_elements = glipper.GCONF_CLIENT.get_int(glipper.GCONF_MAX_ELEMENTS)
 		if self.max_elements == None:
 			self.max_elements = 20
-		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ELEMENTS, lambda x, y, z, a: self.on_max_elements_changed (z.value))
+		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ELEMENTS, lambda x, y, z, a=None: self.on_max_elements_changed (z.value))
 
 	def get_history(self):
 		return self.history

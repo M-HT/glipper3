@@ -8,7 +8,7 @@
 <!ENTITY appname "Glipper">
 ]>
 <!-- =============Document Header ============================= -->
-<article id="index" lang="it"> 
+<article id="index" lang="it">
 <!-- please do not change the id; for translations -->
 
 	<articleinfo>
@@ -27,18 +27,18 @@
 		</copyright>
 		-->
 
-		<publisher> 
-			<publishername>Gli sviluppatori di Glipper</publishername> 
-		</publisher> 
+		<publisher>
+			<publishername>Gli sviluppatori di Glipper</publishername>
+		</publisher>
 
-		<authorgroup> 
-			<author> 
-				<firstname>Karderio</firstname> 
-				<affiliation> 
-					<orgname>Sviluppatore di Glipper</orgname> 
-					<address> <email>kardeio at gmail dot com</email> </address> 
-				</affiliation> 
-			</author> 
+		<authorgroup>
+			<author>
+				<firstname>Karderio</firstname>
+				<affiliation>
+					<orgname>Sviluppatore di Glipper</orgname>
+					<address> <email>kardeio at gmail dot com</email> </address>
+				</affiliation>
+			</author>
 			<author>
 				<firstname>Sven</firstname>
 				<surname>Rech</surname>
@@ -58,17 +58,17 @@
 			<!-- This is appropriate place for other contributors: translators,
 			      maintainers,  etc. Commented out by default.
 			       <othercredit role="translator">
-				<firstname>Latin</firstname> 
-				<surname>Translator 1</surname> 
-				<affiliation> 
-				  <orgname>Latin Translation Team</orgname> 
-				  <address> <email>translator@gnome.org</email> </address> 
+				<firstname>Latin</firstname>
+				<surname>Translator 1</surname>
+				<affiliation>
+				  <orgname>Latin Translation Team</orgname>
+				  <address> <email>translator@gnome.org</email> </address>
 				</affiliation>
 				<contrib>Latin translation</contrib>
 			      </othercredit>
 			-->
 		</authorgroup>
-	    
+
 		<revhistory>
 			<revision>
 				<revnumber>Manuale di Glipper V1.0</revnumber>
@@ -78,28 +78,28 @@
 					<para role="author">Eugenio Depalo</para>
 				</revdescription>
 			</revision>
-			<revision> 
-				<revnumber>Manuale di Glipper V0.90</revnumber> 
-				<date>2006-06-27</date> 
-				<revdescription> 
+			<revision>
+				<revnumber>Manuale di Glipper V0.90</revnumber>
+				<date>2006-06-27</date>
+				<revdescription>
 					<para role="author">karderio</para>
 					<para role="publisher">Gli sviluppatori di Glipper</para>
-				</revdescription> 
-			</revision> 
-		</revhistory> 
+				</revdescription>
+			</revision>
+		</revhistory>
 
 		<releaseinfo>Questo manuale descrive la versione 1.0.</releaseinfo>
 
-		<legalnotice> 
-			<title>Feedback</title> 
+		<legalnotice>
+			<title>Feedback</title>
 			<para>Per segnalare un bug o dare un consiglio riguardante l'applicazione Glipper o questo manuale, segui le istruzioni nella </para>
 			<!-- Translators may also add here feedback address for translations -->
-		</legalnotice> 
+		</legalnotice>
 
 	</articleinfo>
 
-	<indexterm zone="index"> 
-		<primary>Glipper</primary> 
+	<indexterm zone="index">
+		<primary>Glipper</primary>
 	</indexterm>
 
  <!-- ============= Document Body ============================= -->
@@ -286,13 +286,13 @@
   		  </listitem>
   		</itemizedlist></para>
 
-    <sect2 id="plugins-actions">    
+    <sect2 id="plugins-actions">
       <title>Plugin Azioni</title>
       <para>Il plugin <application>Azioni</application> ti permette di definire comandi da eseguire quando un elemento corrisponde a un'espressione regolare.</para>
-      <para>Per gestire le tue azioni, seleziona il plugin <application>Azioni</application> dalla finestra di dialogo <guilabel>Plugin</guilabel> e clicca sul pulsante <guibutton>Preferenze</guibutton>.</para> 
+      <para>Per gestire le tue azioni, seleziona il plugin <application>Azioni</application> dalla finestra di dialogo <guilabel>Plugin</guilabel> e clicca sul pulsante <guibutton>Preferenze</guibutton>.</para>
       <sect3>
          <title>Preferenze</title>
-<table frame="topbot" id="plugins-nopaste-TBL">
+<table frame="topbot" id="plugins-actions-TBL">
         <title>Preferenze di Azioni</title>
         <tgroup cols="2" colsep="0" rowsep="0">
           <colspec colname="colspec0" colwidth="35.09*"/>
@@ -338,10 +338,10 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-network">    
+    <sect2 id="plugins-network">
       <title>Plugin Rete</title>
       <para>Il plugin <application>Rete</application> connette più processi di Glipper via rete per sincronizzare la loro cronologia.</para>
-      <para>Per impostare gli IP a cui vuoi connetterti, seleziona il plugin <application>Rete</application> dalla finestra di dialogo <guilabel>Plugin</guilabel> e clicca sul pulsante <guibutton>Preferenze</guibutton>.</para> 
+      <para>Per impostare gli IP a cui vuoi connetterti, seleziona il plugin <application>Rete</application> dalla finestra di dialogo <guilabel>Plugin</guilabel> e clicca sul pulsante <guibutton>Preferenze</guibutton>.</para>
       <sect3>
       <title>Gestire le connessioni</title>
       <para>Le <guibutton>Preferenze</guibutton> di <application>Rete</application> mostrano due tabelle:</para>
@@ -361,13 +361,13 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-newline">    
+    <sect2 id="plugins-newline">
       <title>Plugin Nuova linea</title>
       <para>Il plugin <application>Nuova linea</application> aggiunge un carattere di nuova linea alla fine degli elementi negli appunti.</para>
-      <para>Questo è solo un plugin di esempio.</para> 
+      <para>Questo è solo un plugin di esempio.</para>
     </sect2>
 
-    <sect2 id="plugins-nopaste">    
+    <sect2 id="plugins-nopaste">
       <title>Plugin Nopaste</title>
       <para>Il plugin <application>Nopaste</application> ti permette di incollare i contenuti dei tuoi appunti in un servizio Nopaste.</para>
       <para>Un servizio Nopaste è un'applicazione web che permette i propri utenti di caricare blocchi di testo, di solito esempi di codice sorgente, per farli visualizzare al pubblico.</para>
@@ -419,11 +419,11 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-snippets">    
+    <sect2 id="plugins-snippets">
       <title>Plugin Snippet</title>
       <para>Il plugin <application>Snippet</application> ti permette di creare snippet dagli elementi della cronologia.</para>
       <para>Gli snippet sono blocchi di testo che puoi usare in differenti situazioni.</para>
-      <para>Per gestire i tuoi snippet, seleziona il plugin <application>Snippets</application> dalla finestra di dialogo <guilabel>Plugin</guilabel> e clicca sul pulsante <guibutton>Preferenze</guibutton>.</para> 
+      <para>Per gestire i tuoi snippet, seleziona il plugin <application>Snippets</application> dalla finestra di dialogo <guilabel>Plugin</guilabel> e clicca sul pulsante <guibutton>Preferenze</guibutton>.</para>
       <sect3>
       <title>Gestire gli snippet</title>
       <para>Il <guibutton>Gestore</guibutton> di <application>Snippet</application> mostra due tabelle:</para>
@@ -444,7 +444,7 @@
       </sect3>
     </sect2>
 
-    <sect2 id="plugins-grow">    
+    <sect2 id="plugins-grow">
       <title>Plugin Crescita</title>
       <para>Il plugin <application>Crescita</application> riconosce se un nuovo elemento è una versione cresciuta del precedente e, se è così, elimina il precedente.</para>
     </sect2>

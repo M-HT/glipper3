@@ -29,6 +29,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hover_expand">True</property>
+                <property name="expand">True</property>
               </object>
             </child>
           </object>
