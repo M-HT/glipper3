@@ -5,6 +5,7 @@ import glipper
 from glipper.Clipboards import *
 from glipper.PluginsManager import *
 from gettext import gettext as _
+import sys
 
 class History(GObject.GObject):
 	__gsignals__ = {
@@ -40,7 +41,10 @@ class History(GObject.GObject):
 
 	def set(self, index, item):
 		assert item is not None
-		item = str(item)
+		if sys.version_info.major >= 3:
+			item = str(item)
+		else:
+			item = unicode(item)
 		if item in self.history:
 			self.history.remove(item)
 
@@ -52,7 +56,10 @@ class History(GObject.GObject):
 
 	def add(self, item, is_from_selection=False):
 		if item is not None:
-			item = str(item)
+			if sys.version_info.major >= 3:
+				item = str(item)
+			else:
+				item = unicode(item)
 			if item in self.history:
 				self.history.remove(item)
 
@@ -79,7 +86,7 @@ class History(GObject.GObject):
 
 	def load(self):
 		try:
-			file = open(glipper.HISTORY_FILE, "r")
+			file = open(glipper.HISTORY_FILE, "rb")
 
 			length = file.readline()
 			while length:
@@ -88,7 +95,7 @@ class History(GObject.GObject):
 				except ValueError:
 					break
 
-				self.history.append(str(file.read(bytes_to_read), 'UTF-8'))
+				self.history.append(file.read(bytes_to_read).decode('UTF-8'))
 				file.read(1) # This is for \n
 				length = file.readline()
 
@@ -100,15 +107,18 @@ class History(GObject.GObject):
 
 	def save(self):
 		try:
-			file = open(glipper.HISTORY_FILE, "w")
+			file = open(glipper.HISTORY_FILE, "wb")
 		except IOError:
 			return # Cannot write to history file
 
 		for item in self.history:
-			assert isinstance(item, str)
+			if sys.version_info.major >= 3:
+				assert isinstance(item, str)
+			else:
+				assert isinstance(item, unicode)
 			string = item.encode('UTF-8')
-			file.write(str(len(string)) + '\n')
-			file.write(string + '\n')
+			file.write(str(len(string)).encode('UTF-8') + b'\n')
+			file.write(string + b'\n')
 
 		file.close()
 

@@ -40,11 +40,21 @@ class Clipboards(GObject.GObject):
 		self.emit('new-item', item, True)
 
 
+def unicode_or_none(bytes_utf8):
+	if bytes_utf8 is None:
+		return None
+	else:
+		return unicode(bytes_utf8, 'UTF-8')
+
+import sys
+if sys.version_info.major >= 3:
+	unicode_or_none = lambda x : x
+
 class Clipboard(object):
 	def __init__(self, clipboard, new_item_callback, use_clipboard_gconf_key):
 		self.new_item_callback = new_item_callback
 		self.clipboard = clipboard
-		self.clipboard_text = self.unicode_or_none(clipboard.wait_for_text())
+		self.clipboard_text = unicode_or_none(clipboard.wait_for_text())
 		self.clipboard.connect('owner-change', self.on_clipboard_owner_change)
 
 		self.use_clipboard = glipper.GCONF_CLIENT.get_bool(use_clipboard_gconf_key)
@@ -69,7 +79,7 @@ class Clipboard(object):
 
 	def on_clipboard_owner_change(self, clipboard, event):
 		if self.use_clipboard:
-			self.clipboard_text = self.unicode_or_none(clipboard.wait_for_text())
+			self.clipboard_text = unicode_or_none(clipboard.wait_for_text())
 			self.new_item_callback(self.clipboard_text)
 
 	def on_use_clipboard_changed(self, client, connection_id, entry, user_data=None):
@@ -77,13 +87,6 @@ class Clipboard(object):
 		if value is None or value.type != GConf.ValueType.BOOL:
 			return
 		self.use_clipboard = value.get_bool()
-
-	@staticmethod
-	def unicode_or_none(bytes_utf8):
-		if bytes_utf8 is None:
-			return None
-		else:
-			return str(bytes_utf8, 'UTF-8')
 
 clipboards = Clipboards()
 

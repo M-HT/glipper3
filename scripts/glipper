@@ -1,14 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # (C) 2007 Sven Rech.
 # Licensed under the GNU GPL.
 
 import gi
+gi.require_version('GLib', '2.0')
 gi.require_version('Gtk', '3.0')
-from gi.repository import GObject
-GObject.threads_init()
-
-from gi.repository import Gtk
+from gi.repository import GLib, Gtk
 import getopt, sys
 from os.path import abspath, join, basename
 
@@ -38,8 +36,8 @@ if hasattr(locale, 'bind_textdomain_codeset'):
 locale.textdomain(GETTEXT_DOMAIN)
 
 if __name__ == "__main__":
-	GObject.set_application_name('Glipper')
-	GObject.set_prgname('glipper')
+	GLib.set_application_name('Glipper')
+	GLib.set_prgname('glipper')
 
 	import glipper.AppIndicator
 	glipper.AppIndicator.AppIndicator()

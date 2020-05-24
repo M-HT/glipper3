@@ -194,5 +194,5 @@ def format_item(item):
 	i = item.replace("\n", " ")
 	i = i.replace("\t", " ")
 	if len(item) > max_item_length:
-	  return i[0:max_item_length/2] + '\u2026' + i[-(max_item_length/2-3):]
+	  return i[0:max_item_length//2] + '\u2026' + i[-(max_item_length//2-3):]
 	return i
