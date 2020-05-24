@@ -40,7 +40,7 @@ class AppIndicator(object):
 		try:
 			gi.require_version('AppIndicator3', '0.1')
 			from gi.repository import AppIndicator3
-		except ValueError, ImportError:
+		except ValueError as ImportError:
 			self._status_icon = StatusIcon()
 			self._status_icon.set_menu(self.menu)
 		else:
@@ -194,5 +194,5 @@ def format_item(item):
 	i = item.replace("\n", " ")
 	i = i.replace("\t", " ")
 	if len(item) > max_item_length:
-	  return i[0:max_item_length/2] + u'\u2026' + i[-(max_item_length/2-3):]
+	  return i[0:max_item_length/2] + '\u2026' + i[-(max_item_length/2-3):]
 	return i

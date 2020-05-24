@@ -35,7 +35,7 @@ def update_menu():
 	if item != None:
 		for action in model:
 			regex = re.compile(action[0])
-			if regex.search(unicode(item)) != None:
+			if regex.search(str(item)) != None:
 				for cmd in action.iterchildren():
 					item = Gtk.MenuItem(cmd[3])
 					item.connect("activate", commandActivated, cmd[0])

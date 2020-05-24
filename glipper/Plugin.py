@@ -28,4 +28,4 @@ class Plugin(object):
 		if hasattr(self.module, name):
 			func = getattr(self.module, name)
 			if callable(func):
-				return apply(func, args)
+				return func(*args)

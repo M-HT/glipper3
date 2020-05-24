@@ -8,7 +8,7 @@ from gettext import gettext as _
 
 class History(GObject.GObject):
 	__gsignals__ = {
-		"changed" : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, [GObject.TYPE_PYOBJECT]),
+		"changed": (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, [GObject.TYPE_PYOBJECT]),
 	}
 
 	def __init__(self):
@@ -40,7 +40,7 @@ class History(GObject.GObject):
 
 	def set(self, index, item):
 		assert item is not None
-		item = unicode(item)
+		item = str(item)
 		if item in self.history:
 			self.history.remove(item)
 
@@ -52,7 +52,7 @@ class History(GObject.GObject):
 
 	def add(self, item, is_from_selection=False):
 		if item is not None:
-			item = unicode(item)
+			item = str(item)
 			if item in self.history:
 				self.history.remove(item)
 
@@ -88,7 +88,7 @@ class History(GObject.GObject):
 				except ValueError:
 					break
 
-				self.history.append(unicode(file.read(bytes_to_read), 'UTF-8'))
+				self.history.append(str(file.read(bytes_to_read), 'UTF-8'))
 				file.read(1) # This is for \n
 				length = file.readline()
 
@@ -105,7 +105,7 @@ class History(GObject.GObject):
 			return # Cannot write to history file
 
 		for item in self.history:
-			assert isinstance(item, unicode)
+			assert isinstance(item, str)
 			string = item.encode('UTF-8')
 			file.write(str(len(string)) + '\n')
 			file.write(string + '\n')

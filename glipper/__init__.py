@@ -9,13 +9,13 @@ gi.require_version('GConf', '2.0')
 from gi.repository import Gtk, Gdk, GConf
 
 # Autotools set the actual data_dir in defs.py
-from defs import VERSION, DATA_DIR
+from .defs import VERSION, DATA_DIR
 
 # Allow to use uninstalled glipper ---------------------------------------------
 UNINSTALLED_GLIPPER = False
 if '_GLIPPER_UNINSTALLED' in os.environ:
 	UNINSTALLED_GLIPPER = True
-	print "Running glipper uninstalled"
+	print("Running glipper uninstalled")
 
 # Sets SHARED_DATA_DIR to local copy, or the system location
 # Shared data dir is most the time /usr/share/glipper
@@ -32,15 +32,15 @@ if UNINSTALLED_GLIPPER:
 		VERSION += "-r%s (bzr)" % revision
 else:
 	SHARED_DATA_DIR = join(DATA_DIR, "glipper")
-print "SHARED_DATA_DIR: %s" % SHARED_DATA_DIR
+print("SHARED_DATA_DIR: %s" % SHARED_DATA_DIR)
 
 
 # check if it exists first, because save_data_path() creates the folder
 xdg_dir_existed = exists(join(xdg.BaseDirectory.xdg_data_home, 'glipper'))
 try:
 	USER_GLIPPER_DIR = xdg.BaseDirectory.save_data_path('glipper')
-except OSError, e:
-	print 'Error: could not create user glipper dir (%s): %s' % (join(xdg.BaseDirectory.xdg_data_home, 'glipper'), e)
+except OSError as e:
+	print('Error: could not create user glipper dir (%s): %s' % (join(xdg.BaseDirectory.xdg_data_home, 'glipper'), e))
 	sys.exit(1)
 
 if exists(expanduser("~/.glipper")) and not xdg_dir_existed:

@@ -95,15 +95,15 @@ class StringListener(threading.Thread):
 
 	def quit(self):
 		try:
-			print "closing connection %s" % self.socket.getpeername()[0]
+			print("closing connection %s" % self.socket.getpeername()[0])
 		except:
-			print "closing connection"
+			print("closing connection")
 		global allConnections
 		allConnections.remove(self)
 		self.socket.close()
 
 	def run(self):
-		print "comparing passwords:"
+		print("comparing passwords:")
 		try:
 			if self.establisher:
 				self.request_password_compare()
@@ -113,11 +113,11 @@ class StringListener(threading.Thread):
 			self.quit()
 			return
 		except PasswordException:
-			print "wrong password for connection %s" % self.socket.getpeername()[0]
+			print("wrong password for connection %s" % self.socket.getpeername()[0])
 			self.quit()
 			return
 
-		print "password ok! start listening"
+		print("password ok! start listening")
 
 		def recv():
 			string = self.socket.recv(4096)
@@ -149,7 +149,7 @@ class ServerListener(threading.Thread):
 		self.acceptIPs = acceptIPs
 
 	def run(self):
-		print "start listening for incoming connections!"
+		print("start listening for incoming connections!")
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.bind(('', GLIPPERPORT))
 		s.setblocking(False)
@@ -166,9 +166,9 @@ class ServerListener(threading.Thread):
 						password = x[1]
 						break
 				if accept:
-					print "connection %s accepted" % addr[0]
+					print("connection %s accepted" % addr[0])
 				else:
-					print "connection %s not accepted" % addr[0]
+					print("connection %s not accepted" % addr[0])
 					raise socket.error()
 			except socket.error:
 				continue
@@ -176,7 +176,7 @@ class ServerListener(threading.Thread):
 			listener = StringListener(conn, password, False)
 			listener.setDaemon(1)
 			listener.start()
-		print "stop listening for incoming connections!"
+		print("stop listening for incoming connections!")
 		s.close()
 
 def stop():
@@ -197,9 +197,9 @@ def init():
 		try:
 			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			s.connect((x[0], GLIPPERPORT))
-			print "connected to %s" % x[0]
+			print("connected to %s" % x[0])
 		except socket.error:
-			print "can\'t connect to %s" % x[0]
+			print("can\'t connect to %s" % x[0])
 			s.close()
 			continue
 		listener = StringListener(s, x[1], True)

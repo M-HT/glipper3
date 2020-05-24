@@ -8,7 +8,7 @@ import glipper
 class Clipboards(GObject.GObject):
 
 	__gsignals__ = {
-		"new-item" : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, [GObject.TYPE_STRING, GObject.TYPE_BOOLEAN]),
+		"new-item": (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, [GObject.TYPE_STRING, GObject.TYPE_BOOLEAN]),
 	}
 
 	def __init__(self):
@@ -83,7 +83,7 @@ class Clipboard(object):
 		if bytes_utf8 is None:
 			return None
 		else:
-			return unicode(bytes_utf8, 'UTF-8')
+			return str(bytes_utf8, 'UTF-8')
 
 clipboards = Clipboards()
 

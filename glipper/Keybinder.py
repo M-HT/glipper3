@@ -9,9 +9,9 @@ import glipper
 
 class Keybinder(GObject.GObject):
 	__gsignals__ = {
-		"activated" : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, [GObject.TYPE_ULONG]),
+		"activated": (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, [GObject.TYPE_ULONG]),
 		# When the keybinding changes, passes a boolean indicating wether the keybinding is successful
-		"changed" : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, [GObject.TYPE_BOOLEAN]),
+		"changed": (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, [GObject.TYPE_BOOLEAN]),
 	}
 
 	def __init__(self):
@@ -48,7 +48,7 @@ class Keybinder(GObject.GObject):
 			self.unbind()
 
 		try:
-			print 'Binding shortcut %s to popup glipper' % self.key_combination
+			print('Binding shortcut %s to popup glipper' % self.key_combination)
 			keybinder.bind(self.key_combination, self.on_keyboard_shortcut)
 			self.bound = True
 		except KeyError:

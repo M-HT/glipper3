@@ -31,13 +31,13 @@ class About(object):
 		self.about = Gtk.AboutDialog()
 
 		infos = {
-			"name" : _("Glipper"),
-			"logo-icon-name" : "glipper",
-			"version" : glipper.VERSION,
-			"comments" : _("A clipboard manager."),
-			"copyright" : "Copyright © 2007 Sven Rech, Eugenio Depalo, Karderio.\nCopyright © 2011 Laszlo Pandy",
-			"website" : "http://launchpad.net/glipper",
-			"website-label" : _("Glipper website"),
+			"name": _("Glipper"),
+			"logo-icon-name": "glipper",
+			"version": glipper.VERSION,
+			"comments": _("A clipboard manager."),
+			"copyright": "Copyright © 2007 Sven Rech, Eugenio Depalo, Karderio.\nCopyright © 2011 Laszlo Pandy",
+			"website": "http://launchpad.net/glipper",
+			"website-label": _("Glipper website"),
 		}
 
 		#about.set_artists([])
@@ -52,7 +52,7 @@ class About(object):
 
 		self.about.set_license_type(Gtk.License.GPL_2_0_ONLY)
 
-		for prop, val in infos.items():
+		for prop, val in list(infos.items()):
 			self.about.set_property(prop, val)
 
 		self.about.connect("response", self.destroy)

@@ -21,20 +21,20 @@ try:
 	import prctl
 	process_name = basename(__file__)
 	prctl.set_name(process_name)
-	print "Changed process name to:", process_name
+	print("Changed process name to:", process_name)
 except:
-	print "Unable to set process name"
+	print("Unable to set process name")
 
 import gettext, locale
 GETTEXT_DOMAIN = 'glipper'
 gettext.bindtextdomain(GETTEXT_DOMAIN, abspath(join(glipper.defs.DATA_DIR, "locale")))
 if hasattr(gettext, 'bind_textdomain_codeset'):
-	gettext.bind_textdomain_codeset(GETTEXT_DOMAIN,'UTF-8')
+	gettext.bind_textdomain_codeset(GETTEXT_DOMAIN, 'UTF-8')
 gettext.textdomain(GETTEXT_DOMAIN)
 
 locale.bindtextdomain(GETTEXT_DOMAIN, abspath(join(glipper.defs.DATA_DIR, "locale")))
 if hasattr(locale, 'bind_textdomain_codeset'):
-	locale.bind_textdomain_codeset(GETTEXT_DOMAIN,'UTF-8')
+	locale.bind_textdomain_codeset(GETTEXT_DOMAIN, 'UTF-8')
 locale.textdomain(GETTEXT_DOMAIN)
 
 if __name__ == "__main__":

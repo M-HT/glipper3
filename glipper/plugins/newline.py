@@ -15,7 +15,7 @@ last_set_item = "\n"
 def on_new_item(arg):
 	global last_set_item
 	if arg != last_set_item:
-		print 'new line', arg
+		print('new line', arg)
 		last_set_item = arg + '\n'
 
 		glipper.set_history_item(0, last_set_item)

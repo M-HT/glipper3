@@ -88,7 +88,7 @@ class Manager:
 	def on_add_button_clicked(self, widget):
 		self.history_model, iter = self.history_selection.get_selected()
 		if iter:
-			if self.history_model.get_value(iter,0) not in snippets:
+			if self.history_model.get_value(iter, 0) not in snippets:
 				snippets.append(self.history_model.get_value(iter, 0))
 				self.snippets_model.append([self.history_model.get_value(iter, 0)])
 				save_snippets()

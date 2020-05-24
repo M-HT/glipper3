@@ -15,11 +15,11 @@ def get_list_str(val):
     _list = val.get_list()
     if _list is None:
         return None
-    return map(lambda x: x.get_string(), _list)
+    return [x.get_string() for x in _list]
 
 class PluginsManager(GObject.GObject):
 	__gsignals__ = {
-		"menu-items-changed" : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, []),
+		"menu-items-changed": (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, []),
 	}
 
 	def __init__(self):
@@ -53,7 +53,7 @@ class PluginsManager(GObject.GObject):
 					plugin = Plugin(file_name[:-3])
 					self.plugin_cache[plugin.get_file_name()] = plugin
 				except:
-					print "Error trying to open plugin %s" % file_name
+					print("Error trying to open plugin %s" % file_name)
 
 	def load(self):
 		self.load_cache()
@@ -121,7 +121,7 @@ class PluginsWindow(object):
 		builder_file = Gtk.Builder()
 		builder_file.add_from_file(join(glipper.SHARED_DATA_DIR, "plugins-window.ui"))
 
-		self.FILE_NAME_COLUMN, self.ENABLED_COLUMN, self.AUTOSTART_COLUMN, self.NAME_COLUMN, self.DESCRIPTION_COLUMN, self.PREFERENCES_COLUMN = range(6)
+		self.FILE_NAME_COLUMN, self.ENABLED_COLUMN, self.AUTOSTART_COLUMN, self.NAME_COLUMN, self.DESCRIPTION_COLUMN, self.PREFERENCES_COLUMN = list(range(6))
 
 		self.plugins_window = builder_file.get_object("plugins_window")
 		self.plugins_list = builder_file.get_object("plugins_list")
@@ -236,7 +236,7 @@ def get_glipper_plugins_manager():
 	return plugins_manager
 def get_glipper_plugin_cache():
 	plugins_manager.load_cache()
-	return plugins_manager.plugin_cache.values()
+	return list(plugins_manager.plugin_cache.values())
 def get_glipper_plugin_from_cache(file_name):
 	plugins_manager.load_cache()
 	return plugins_manager.plugin_cache.get(file_name, None)
