@@ -5,8 +5,8 @@ import xdg.BaseDirectory
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-gi.require_version('GConf', '2.0')
-from gi.repository import Gtk, Gdk, GConf
+gi.require_version('Gio', '2.0')
+from gi.repository import Gtk, Gdk, Gio
 
 # Autotools set the actual data_dir in defs.py
 from .defs import VERSION, DATA_DIR
@@ -69,37 +69,42 @@ HISTORY_FILE = join(USER_GLIPPER_DIR, "history")
 # Maximum length constant for tooltips item in the history
 MAX_TOOLTIPS_LENGTH = 11347
 
-#Gconf client
-GCONF_CLIENT = GConf.Client.get_default()
+#Gio settings
+if UNINSTALLED_GLIPPER:
+	schemaSource = Gio.SettingsSchemaSource.new_from_directory(SHARED_DATA_DIR, None, False)
+	schema = schemaSource.lookup("net.launchpad.Glipper", False)
+	GSETTINGS = Gio.Settings.new_full(schema, None, None)
+else:
+	GSETTINGS = Gio.Settings("net.launchpad.Glipper")
 
-# GConf directory for deskbar in window mode and shared settings
-GCONF_DIR = "/apps/glipper"
+# GSettings key to the setting for the amount of elements in history
+GSETTINGS_MAX_ELEMENTS = "max-elements"
 
-# GConf key to the setting for the amount of elements in history
-GCONF_MAX_ELEMENTS = GCONF_DIR + "/max_elements"
+# GSettings key to the setting for the length of one history item
+GSETTINGS_MAX_ITEM_LENGTH = "max-item-length"
 
-# GConf key to the setting for the length of one history item
-GCONF_MAX_ITEM_LENGTH = GCONF_DIR + "/max_item_length"
+# GSettings key to the setting for the key combination to popup glipper
+GSETTINGS_KEY_COMBINATION = "key-combination"
 
-# GConf key to the setting for the key combination to popup glipper
-GCONF_KEY_COMBINATION = GCONF_DIR + "/key_combination"
+# GSettings key to the setting for using the default clipboard
+GSETTINGS_USE_DEFAULT_CLIPBOARD = "use-default-clipboard"
 
-# GConf key to the setting for using the default clipboard
-GCONF_USE_DEFAULT_CLIPBOARD = GCONF_DIR + "/use_default_clipboard"
+# GSettings key to the setting for using the primary clipboard
+GSETTINGS_USE_PRIMARY_CLIPBOARD = "use-primary-clipboard"
 
-# GConf key to the setting for using the primary clipboard
-GCONF_USE_PRIMARY_CLIPBOARD = GCONF_DIR + "/use_primary_clipboard"
+# GSettings key to the setting for whether the default entry should be marked in bold
+GSETTINGS_MARK_DEFAULT_ENTRY = "mark-default-entry"
 
-# GConf key to the setting for whether the default entry should be marked in bold
-GCONF_MARK_DEFAULT_ENTRY = GCONF_DIR + "/mark_default_entry"
+# GSettings key to the setting for whether the history should be saved
+GSETTINGS_SAVE_HISTORY = "save-history"
 
-# GConf key to the setting for whether the history should be saved
-GCONF_SAVE_HISTORY = GCONF_DIR + "/save_history"
+GSETTINGS_AUTOSTART_PLUGINS = "autostart-plugins"
 
-GCONF_AUTOSTART_PLUGINS = GCONF_DIR + "/autostart_plugins"
-
-# Preload GConf directories
-GCONF_CLIENT.add_dir(GCONF_DIR, GConf.ClientPreloadType.PRELOAD_RECURSIVE)
+# Migrate settings from GConf
+if GSETTINGS.get_boolean("migrate-from-gconf"):
+	from glipper.Migration import migrate_settings_from_gconf
+	migrate_settings_from_gconf()
+	GSETTINGS.set_boolean("migrate-from-gconf", False)
 
 # Functions callable by plugins
 

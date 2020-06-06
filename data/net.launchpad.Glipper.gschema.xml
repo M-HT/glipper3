@@ -1,0 +1,49 @@
+<schemalist>
+  <schema id="net.launchpad.Glipper" path="/apps/glipper/">
+    <key name="max-elements" type="i">
+      <default>20</default>
+      <summary>Amount of elements in history</summary>
+      <description>Amount of elements in history</description>
+    </key>
+    <key name="max-item-length" type="i">
+      <default>35</default>
+      <summary>Length of one history entry</summary>
+      <description>Length of one history entry</description>
+    </key>
+    <key name="use-default-clipboard" type="b">
+      <default>true</default>
+      <summary>Use Default Clipboard</summary>
+      <description>Use Default Clipboard</description>
+    </key>
+    <key name="use-primary-clipboard" type="b">
+      <default>true</default>
+      <summary>Use Primary Clipboard</summary>
+      <description>Use Primary Clipboard</description>
+    </key>
+    <key name="mark-default-entry" type="b">
+      <default>true</default>
+      <summary>Whether default entry should be tagged</summary>
+      <description>Whether default entry should be tagged</description>
+    </key>
+    <key name="save-history" type="b">
+      <default>true</default>
+      <summary>Whether history should be saved</summary>
+      <description>Whether history should be saved</description>
+    </key>
+    <key name="key-combination" type="s">
+      <default>'&lt;Ctrl&gt;&lt;Alt&gt;c'</default>
+      <summary>Keyboard combination to popup glipper</summary>
+      <description>Keyboard combination to popup glipper</description>
+    </key>
+    <key name="autostart-plugins" type="as">
+      <default>[ 'nopaste' ]</default>
+      <summary>the plugins to start at startup</summary>
+      <description>the plugins to start when starting glipper</description>
+    </key>
+    <key name="migrate-from-gconf" type="b">
+      <default>true</default>
+      <summary>Migrate settings from GConf</summary>
+      <description>Migrate settings from GConf</description>
+    </key>
+  </schema>
+</schemalist>

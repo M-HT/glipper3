@@ -1,9 +1,6 @@
 import gi
-gi.require_version('GConf', '2.0')
-#gi.require_version('Gtk', '3.0')
 gi.require_version('Keybinder', '3.0')
-from gi.repository import GObject, GConf
-#from gi.repository import Gtk as gtk
+from gi.repository import GObject
 from gi.repository import Keybinder as keybinder
 import glipper
 
@@ -22,19 +19,20 @@ class Keybinder(GObject.GObject):
 
 		keybinder.init()
 
-		# Set and retreive global keybinding from GConf
-		self.key_combination = glipper.GCONF_CLIENT.get_string(glipper.GCONF_KEY_COMBINATION)
+		# Set and retreive global keybinding from GSettings
+		glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_KEY_COMBINATION, lambda x, y, z=None: self.on_config_key_combination())
+		self.key_combination = glipper.GSETTINGS.get_string(glipper.GSETTINGS_KEY_COMBINATION)
 		if self.key_combination == None:
 			# This is for uninstalled cases, the real default is in the schema
 			self.key_combination = "<Ctrl><Alt>C"
-		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_KEY_COMBINATION, lambda x, y, z, a=None: self.on_config_key_combination(z.value))
 
 		self.bind()
 
-	def on_config_key_combination(self, value=None):
-		if value != None and value.type == GConf.ValueType.STRING:
+	def on_config_key_combination(self):
+		value = glipper.GSETTINGS.get_string(glipper.GSETTINGS_KEY_COMBINATION)
+		if value != None:
 			self.prevbinding = self.key_combination
-			self.key_combination = value.get_string()
+			self.key_combination = value
 			self.bind()
 
 	def on_keyboard_shortcut(self, keystr, user_data=None):
@@ -65,10 +63,7 @@ class Keybinder(GObject.GObject):
 			# if the requested keybinding is not bound, a KeyError will be thrown
 			pass
 
-# todo: is if needed ?
-#if gtk.pygtk_version < (2,8,0):
-if True:
-	GObject.type_register(Keybinder)
+GObject.type_register(Keybinder)
 
 _keybinder = Keybinder()
 

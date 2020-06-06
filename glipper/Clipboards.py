@@ -1,8 +1,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-gi.require_version('GConf', '2.0')
-from gi.repository import GObject, Gtk, Gdk, GConf
+from gi.repository import GObject, Gtk, Gdk
 import glipper
 
 class Clipboards(GObject.GObject):
@@ -15,10 +14,10 @@ class Clipboards(GObject.GObject):
 		GObject.GObject.__init__(self)
 		self.default_clipboard = Clipboard(Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD),
 		                                   self.emit_new_item,
-		                                   glipper.GCONF_USE_DEFAULT_CLIPBOARD)
+		                                   glipper.GSETTINGS_USE_DEFAULT_CLIPBOARD)
 		self.primary_clipboard = Clipboard(Gtk.Clipboard.get(Gdk.SELECTION_PRIMARY),
 		                                   self.emit_new_item_selection,
-		                                   glipper.GCONF_USE_PRIMARY_CLIPBOARD)
+		                                   glipper.GSETTINGS_USE_PRIMARY_CLIPBOARD)
 
 	def set_text(self, text):
 		self.default_clipboard.set_text(text)
@@ -57,10 +56,10 @@ class Clipboard(object):
 		self.clipboard_text = unicode_or_none(clipboard.wait_for_text())
 		self.clipboard.connect('owner-change', self.on_clipboard_owner_change)
 
-		self.use_clipboard = glipper.GCONF_CLIENT.get_bool(use_clipboard_gconf_key)
+		glipper.GSETTINGS.connect("changed::" + use_clipboard_gconf_key, self.on_use_clipboard_changed)
+		self.use_clipboard = glipper.GSETTINGS.get_boolean(use_clipboard_gconf_key)
 		if self.use_clipboard is None:
 			self.use_clipboard = True
-		glipper.GCONF_CLIENT.notify_add(use_clipboard_gconf_key, self.on_use_clipboard_changed)
 
 	def get_text(self):
 		return self.clipboard_text
@@ -82,11 +81,11 @@ class Clipboard(object):
 			self.clipboard_text = unicode_or_none(clipboard.wait_for_text())
 			self.new_item_callback(self.clipboard_text)
 
-	def on_use_clipboard_changed(self, client, connection_id, entry, user_data=None):
-		value = entry.value
-		if value is None or value.type != GConf.ValueType.BOOL:
+	def on_use_clipboard_changed(self, settings, key, user_data=None):
+		value = settings.get_boolean(key)
+		if value is None:
 			return
-		self.use_clipboard = value.get_bool()
+		self.use_clipboard = value
 
 clipboards = Clipboards()
 

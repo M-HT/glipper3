@@ -3,8 +3,7 @@ from os.path import *
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-gi.require_version('GConf', '2.0')
-from gi.repository import GObject, Gtk, Gdk, GConf
+from gi.repository import GObject, Gtk, Gdk
 from gettext import gettext as _
 
 import glipper, glipper.About, glipper.Preferences
@@ -49,8 +48,10 @@ class AppIndicator(object):
 			self._app_indicator.set_menu(self.menu)
 			self._app_indicator.set_title("Glipper")
 
-		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a=None: self.update_menu(get_glipper_history().get_history()))
-		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a=None: self.update_menu(get_glipper_history().get_history()))
+		glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_MARK_DEFAULT_ENTRY, lambda x, y, z=None: self.update_menu(get_glipper_history().get_history()))
+		glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_MAX_ITEM_LENGTH, lambda x, y, z=None: self.update_menu(get_glipper_history().get_history()))
+		glipper.GSETTINGS.get_boolean(glipper.GSETTINGS_MARK_DEFAULT_ENTRY)
+		glipper.GSETTINGS.get_int(glipper.GSETTINGS_MAX_ITEM_LENGTH)
 
 		Gtk.Window.set_default_icon_name("glipper")
 
@@ -157,38 +158,41 @@ class AppIndicator(object):
 
 # These variables and functions are available for all Applet instances:
 
-mark_default_entry = glipper.GCONF_CLIENT.get_bool(glipper.GCONF_MARK_DEFAULT_ENTRY)
+glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_MARK_DEFAULT_ENTRY, lambda x, y, z=None: on_mark_default_entry_changed ())
+mark_default_entry = glipper.GSETTINGS.get_boolean(glipper.GSETTINGS_MARK_DEFAULT_ENTRY)
 if mark_default_entry == None:
 	mark_default_entry = True
-glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MARK_DEFAULT_ENTRY, lambda x, y, z, a=None: on_mark_default_entry_changed (z.value))
 
-save_history = glipper.GCONF_CLIENT.get_bool(glipper.GCONF_SAVE_HISTORY)
+glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_SAVE_HISTORY, lambda x, y, z=None: on_save_history_changed ())
+save_history = glipper.GSETTINGS.get_boolean(glipper.GSETTINGS_SAVE_HISTORY)
 if save_history == None:
 	save_history = True
-glipper.GCONF_CLIENT.notify_add(glipper.GCONF_SAVE_HISTORY, lambda x, y, z, a=None: on_save_history_changed (z.value))
 
-max_item_length = glipper.GCONF_CLIENT.get_int(glipper.GCONF_MAX_ITEM_LENGTH)
+glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_MAX_ITEM_LENGTH, lambda x, y, z=None: on_max_item_length_changed ())
+max_item_length = glipper.GSETTINGS.get_int(glipper.GSETTINGS_MAX_ITEM_LENGTH)
 if max_item_length == None:
 	max_elements = 35
-glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a=None: on_max_item_length_changed (z.value))
 
 def on_mark_default_entry_changed(value):
 	global mark_default_entry
-	if value is None or value.type != GConf.ValueType.BOOL:
+	value = mark_default_entry = glipper.GSETTINGS.get_boolean(glipper.GSETTINGS_MARK_DEFAULT_ENTRY)
+	if value is None:
 		return
-	mark_default_entry = value.get_bool()
+	mark_default_entry = value
 
 def on_save_history_changed(value):
 	global save_history
-	if value is None or value.type != GConf.ValueType.BOOL:
+	value = glipper.GSETTINGS.get_boolean(glipper.GSETTINGS_SAVE_HISTORY)
+	if value is None:
 		return
-	save_history = value.get_bool()
+	save_history = value
 
 def on_max_item_length_changed (value):
 	global max_item_length
-	if value is None or value.type != GConf.ValueType.INT:
+	value = glipper.GSETTINGS.get_int(glipper.GSETTINGS_MAX_ITEM_LENGTH)
+	if value is None:
 		return
-	max_item_length = value.get_int()
+	max_item_length = value
 
 def format_item(item):
 	i = item.replace("\n", " ")

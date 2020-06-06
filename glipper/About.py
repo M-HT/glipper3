@@ -2,21 +2,9 @@
 from gettext import gettext as _
 import gi
 gi.require_version('Gtk', '3.0')
-#gi.require_version('Gdk', '3.0')
-#from gi.repository import Gdk
 from gi.repository import Gtk
 import glipper
 
-
-#def on_email(about, mail):
-#	Gtk.show_uri(None, "mailto:%s" % mail, Gdk.CURRENT_TIME)
-
-#def on_url(about, link):
-#	Gtk.show_uri(None, link, Gdk.CURRENT_TIME)
-
-# todo: is this needed ?
-#Gtk.about_dialog_set_email_hook(on_email)
-#Gtk.about_dialog_set_url_hook(on_url)
 
 class About(object):
 	__instance = None

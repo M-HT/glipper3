@@ -2,20 +2,11 @@ import gi
 gi.require_version('Gio', '2.0')
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-gi.require_version('GConf', '2.0')
-from gi.repository import GObject, Gio, Gtk, Gdk, GConf
+from gi.repository import GObject, Gio, Gtk, Gdk
 import glipper
 from gettext import gettext as _
 from os.path import *
 from glipper.Plugin import *
-
-def get_list_str(val):
-    if val is None:
-        return None
-    _list = val.get_list()
-    if _list is None:
-        return None
-    return [x.get_string() for x in _list]
 
 class PluginsManager(GObject.GObject):
 	__gsignals__ = {
@@ -28,16 +19,15 @@ class PluginsManager(GObject.GObject):
 		self.menu_items = [] # History menu items for plugins
 		self.plugin_cache = None
 
-		self.autostart_plugins = get_list_str(glipper.GCONF_CLIENT.get(glipper.GCONF_AUTOSTART_PLUGINS))
+		glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_AUTOSTART_PLUGINS, lambda x, y, z=None: self.on_autostart_plugins_changed ())
+
+		self.autostart_plugins = glipper.GSETTINGS.get_strv(glipper.GSETTINGS_AUTOSTART_PLUGINS)
 
 		if self.autostart_plugins == None:
 			self.autostart_plugins = ['nopaste']
-		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_AUTOSTART_PLUGINS, lambda x, y, z, a=None: self.on_autostart_plugins_changed (z.value))
 
-	def on_autostart_plugins_changed(self, value):
-		if value is None or value.type != GConf.ValueType.LIST:
-			return
-		self.autostart_plugins = get_list_str(glipper.GCONF_CLIENT.get(glipper.GCONF_AUTOSTART_PLUGINS))
+	def on_autostart_plugins_changed(self):
+		self.autostart_plugins = glipper.GSETTINGS.get_strv(glipper.GSETTINGS_AUTOSTART_PLUGINS)
 
 	def load_cache(self):
 		if self.plugin_cache is not None:
@@ -140,10 +130,10 @@ class PluginsWindow(object):
 		self.plugins_list.append_column(Gtk.TreeViewColumn(_("Name"), Gtk.CellRendererText(), text = self.NAME_COLUMN))
 		self.plugins_list.append_column(Gtk.TreeViewColumn(_("Description"), Gtk.CellRendererText(), text = self.DESCRIPTION_COLUMN))
 
-		self.autostart_plugins = get_list_str(glipper.GCONF_CLIENT.get(glipper.GCONF_AUTOSTART_PLUGINS))
+		self.autostart_plugins_notify = glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_AUTOSTART_PLUGINS, lambda x, y, z=None: self.on_autostart_plugins_changed ())
+		self.autostart_plugins = glipper.GSETTINGS.get_strv(glipper.GSETTINGS_AUTOSTART_PLUGINS)
 		if self.autostart_plugins == None:
 			self.autostart_plugins = ['nopaste']
-		self.autostart_plugins_notify = glipper.GCONF_CLIENT.notify_add(glipper.GCONF_AUTOSTART_PLUGINS, lambda x, y, z, a=None: self.on_autostart_plugins_changed (z.value))
 
 		builder_file.connect_signals({
 			'on_plugins_window_response': self.on_plugins_window_response,
@@ -165,10 +155,8 @@ class PluginsWindow(object):
 			                                plugin.get_description(),
 			                                plugin.has_preferences()])
 
-	def on_autostart_plugins_changed(self, value):
-		if value is None or value.type != GConf.ValueType.LIST:
-			return
-		self.autostart_plugins = get_list_str(glipper.GCONF_CLIENT.get(glipper.GCONF_AUTOSTART_PLUGINS))
+	def on_autostart_plugins_changed(self):
+		self.autostart_plugins = glipper.GSETTINGS.get_strv(glipper.GSETTINGS_AUTOSTART_PLUGINS)
 
 		iter = self.plugins_list_model.get_iter_first()
 
@@ -185,7 +173,7 @@ class PluginsWindow(object):
 	def on_plugins_window_response(self, dialog, response):
 		if response == Gtk.ResponseType.DELETE_EVENT or response == Gtk.ResponseType.CLOSE:
 			dialog.destroy()
-			glipper.GCONF_CLIENT.notify_remove(self.autostart_plugins_notify)
+			glipper.GSETTINGS.disconnect(self.autostart_plugins_notify)
 
 			PluginsWindow.__instance = None
 		elif response == Gtk.ResponseType.HELP:
@@ -216,8 +204,7 @@ class PluginsWindow(object):
 			self.autostart_plugins.append(file_name)
 
 		self.plugins_list_model.set_value(iter, self.AUTOSTART_COLUMN, plugins_manager.get_autostarted(file_name))
-		# todo: this can't be done using introspection
-		#glipper.GCONF_CLIENT.set_list(glipper.GCONF_AUTOSTART_PLUGINS, GConf.ValueType.STRING, self.autostart_plugins)
+		glipper.GSETTINGS.set_strv(glipper.GSETTINGS_AUTOSTART_PLUGINS, self.autostart_plugins)
 
 	def on_enabled_toggled(self, renderer, path):
 		iter = self.plugins_list_model.get_iter(path)

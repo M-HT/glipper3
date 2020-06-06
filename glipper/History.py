@@ -1,6 +1,5 @@
 import gi
-gi.require_version('GConf', '2.0')
-from gi.repository import GObject, GConf
+from gi.repository import GObject
 import glipper
 from glipper.Clipboards import *
 from glipper.PluginsManager import *
@@ -17,10 +16,10 @@ class History(GObject.GObject):
 		self.history = []
 		get_glipper_clipboards().connect('new-item', self.on_new_item)
 
-		self.max_elements = glipper.GCONF_CLIENT.get_int(glipper.GCONF_MAX_ELEMENTS)
+		glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_MAX_ELEMENTS, lambda x, y, z=None: self.on_max_elements_changed ())
+		self.max_elements = glipper.GSETTINGS.get_int(glipper.GSETTINGS_MAX_ELEMENTS)
 		if self.max_elements == None:
 			self.max_elements = 20
-		glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ELEMENTS, lambda x, y, z, a=None: self.on_max_elements_changed (z.value))
 
 	def get_history(self):
 		return self.history
@@ -122,10 +121,11 @@ class History(GObject.GObject):
 
 		file.close()
 
-	def on_max_elements_changed (self, value):
-		if value is None or value.type != GConf.ValueType.INT:
+	def on_max_elements_changed (self):
+		value = glipper.GSETTINGS.get_int(glipper.GSETTINGS_MAX_ELEMENTS)
+		if value is None:
 			return
-		self.max_elements = value.get_int()
+		self.max_elements = value
 		if len(self.history) > self.max_elements:
 			self.history = self.history[0:self.max_elements]
 			self.emit('changed', self.history)

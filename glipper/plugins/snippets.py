@@ -115,14 +115,14 @@ menu = Gtk.Menu()
 def init():
 	load_snippets()
 	glipper.add_menu_item(menu_item)
-	glipper.GCONF_CLIENT.notify_add(glipper.GCONF_MAX_ITEM_LENGTH, lambda x, y, z, a=None: update_menu())
+	glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_MAX_ITEM_LENGTH, lambda x, y, z=None: update_menu())
 	update_menu()
 
 def on_activate(menuitem, snippet):
 	glipper.add_history_item(snippet)
 
 def update_menu():
-	max_length = glipper.GCONF_CLIENT.get_int(glipper.GCONF_MAX_ITEM_LENGTH)
+	max_length = glipper.GSETTINGS.get_int(glipper.GSETTINGS_MAX_ITEM_LENGTH)
 	global menu
 	menu.destroy()
 	menu = Gtk.Menu()
