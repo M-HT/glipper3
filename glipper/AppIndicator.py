@@ -33,20 +33,33 @@ class StatusIcon:
 class AppIndicator(object):
 	def __init__(self):
 		self.menu = Gtk.Menu()
+		self._xapp_status_icon = None
 		self._app_indicator = None
 		self._status_icon = None
 
 		try:
-			gi.require_version('AppIndicator3', '0.1')
-			from gi.repository import AppIndicator3
+			gi.require_version('XApp', '1.0')
+			from gi.repository import XApp
 		except ValueError as ImportError:
-			self._status_icon = StatusIcon()
-			self._status_icon.set_menu(self.menu)
+			try:
+				gi.require_version('AppIndicator3', '0.1')
+				from gi.repository import AppIndicator3
+			except ValueError as ImportError:
+				self._status_icon = StatusIcon()
+				self._status_icon.set_menu(self.menu)
+			else:
+				self._app_indicator = AppIndicator3.Indicator.new("glipper", "glipper", AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
+				self._app_indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
+				self._app_indicator.set_menu(self.menu)
+				self._app_indicator.set_title("Glipper")
 		else:
-			self._app_indicator = AppIndicator3.Indicator.new("glipper", "glipper", AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
-			self._app_indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
-			self._app_indicator.set_menu(self.menu)
-			self._app_indicator.set_title("Glipper")
+			self._xapp_status_icon = XApp.StatusIcon()
+			self._xapp_status_icon.set_icon_name("glipper")
+			self._xapp_status_icon.set_tooltip_text("Glipper")
+			self._xapp_status_icon.set_name("glipper")
+			self._xapp_status_icon.set_primary_menu(self.menu)
+			self._xapp_status_icon.set_secondary_menu(self.menu)
+			self._xapp_status_icon.set_visible(True)
 
 		glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_MARK_DEFAULT_ENTRY, lambda x, y, z=None: self.update_menu(get_glipper_history().get_history()))
 		glipper.GSETTINGS.connect("changed::" + glipper.GSETTINGS_MAX_ITEM_LENGTH, lambda x, y, z=None: self.update_menu(get_glipper_history().get_history()))
