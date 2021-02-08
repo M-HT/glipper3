@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkListStore" id="popup_liststore">
+    <columns>
+      <!-- column-name number -->
+      <column type="gchararray"/>
+      <!-- column-name circle -->
+      <column type="gchararray"/>
+      <!-- column-name text -->
+      <column type="gchararray"/>
+      <!-- column-name font_weight -->
+      <column type="gint"/>
+      <!-- column-name clipboard_text -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkWindow" id="popup_window">
+    <property name="can_focus">False</property>
+    <property name="border_width">2</property>
+    <property name="title" translatable="yes">Glipper popup</property>
+    <property name="default_width">290</property>
+    <property name="default_height">422</property>
+    <property name="decorated">False</property>
+    <signal name="focus-out-event" handler="on_popup_window_focus_out_event" swapped="no"/>
+    <child>
+      <object class="GtkScrolledWindow" id="popup_scrolledwindow">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="hscrollbar_policy">automatic</property>
+        <child>
+          <object class="GtkTreeView" id="popup_treeview">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="model">popup_liststore</property>
+            <property name="headers_visible">False</property>
+            <property name="headers_clickable">False</property>
+            <property name="enable_search">False</property>
+            <property name="search_column">0</property>
+            <signal name="button-press-event" handler="on_popup_treeview_button_press_event" swapped="no"/>
+            <signal name="key-press-event" handler="on_popup_treeview_key_press_event" swapped="no"/>
+            <child>
+              <object class="GtkTreeViewColumn" id="treeviewcolumn1">
+                <property name="title" translatable="yes">number</property>
+                <child>
+                  <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                  <attributes>
+                    <attribute name="text">0</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn" id="treeviewcolumn2">
+                <property name="title" translatable="yes">circle</property>
+                <child>
+                  <object class="GtkCellRendererText" id="cellrenderertext2"/>
+                  <attributes>
+                    <attribute name="text">1</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn" id="treeviewcolumn3">
+                <property name="title" translatable="yes">text</property>
+                <child>
+                  <object class="GtkCellRendererText" id="cellrenderertext3"/>
+                  <attributes>
+                    <attribute name="text">2</attribute>
+                    <attribute name="weight">3</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

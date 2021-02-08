@@ -6,7 +6,7 @@ gi.require_version('Gdk', '3.0')
 from gi.repository import GObject, Gtk, Gdk
 from gettext import gettext as _
 
-import glipper, glipper.About, glipper.Preferences
+import glipper, glipper.About, glipper.Preferences, glipper.Popup
 from glipper.Keybinder import *
 from glipper.History import *
 from glipper.PluginsManager import *
@@ -97,7 +97,11 @@ class AppIndicator(object):
 			menu_item.set_sensitive(False)
 			self.menu.append(menu_item)
 		else:
+			num_items = 0
 			for item in history:
+				num_items = num_items + 1
+				if num_items > 10:
+					break
 				menu_item = Gtk.CheckMenuItem.new_with_label(format_item(item))
 				menu_item.set_property('draw-as-radio', True)
 
@@ -112,6 +116,13 @@ class AppIndicator(object):
 
 				menu_item.connect('activate', self.on_menu_item_activate, item)
 				self.menu.append(menu_item)
+
+			if num_items > 10:
+				popup_item = Gtk.MenuItem.new_with_mnemonic(_("_Quick paste"))
+				popup_item.connect('activate', self.on_popup)
+
+				self.menu.append(Gtk.SeparatorMenuItem())
+				self.menu.append(popup_item)
 
 		self.menu.append(Gtk.SeparatorMenuItem())
 
@@ -143,6 +154,9 @@ class AppIndicator(object):
 
 		self.menu.show_all()
 
+	def on_popup (self, component):
+		glipper.Popup.Popup(self.menu, Gdk.CURRENT_TIME)
+
 	def on_preferences (self, component):
 		glipper.Preferences.Preferences()
 
@@ -156,8 +170,7 @@ class AppIndicator(object):
 		PluginsWindow()
 
 	def on_key_combination_press(self, widget, time):
-		# todo: this doesn't work in gtk3
-		self.menu.popup(None, None, None, None, 1, Gtk.get_current_event_time())
+		glipper.Popup.Popup(self.menu, time)
 
 	def on_key_combination_changed(self, keybinder, success):
 		if success:
@@ -211,5 +224,5 @@ def format_item(item):
 	i = item.replace("\n", " ")
 	i = i.replace("\t", " ")
 	if len(item) > max_item_length:
-	  return i[0:max_item_length//2] + '\u2026' + i[-(max_item_length//2-3):]
+	  return i[0:max_item_length//2] + u'\u2026' + i[-(max_item_length//2-3):]
 	return i
