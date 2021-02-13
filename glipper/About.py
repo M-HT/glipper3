@@ -23,8 +23,8 @@ class About(object):
 			"logo-icon-name": "glipper",
 			"version": glipper.VERSION,
 			"comments": _("A clipboard manager."),
-			"copyright": "Copyright © 2007 Sven Rech, Eugenio Depalo, Karderio.\nCopyright © 2011 Laszlo Pandy",
-			"website": "http://launchpad.net/glipper",
+			"copyright": "Copyright © 2007 Sven Rech, Eugenio Depalo, Karderio.\nCopyright © 2011 Laszlo Pandy\nCopyright © 2021 Roman Pauer",
+			"website": "https://github.com/M-HT/glipper3",
 			"website-label": _("Glipper website"),
 		}
 
@@ -33,7 +33,8 @@ class About(object):
 		self.about.set_authors(["Sven Rech <sven@gmx.de>",
 		                        "Eugenio Depalo <eugeniodepalo@mac.com>",
 		                        "Karderio <karderio@gmail.com>",
-		                        "Laszlo Pandy <laszlok2@gmail.com>"])
+		                        "Laszlo Pandy <laszlok2@gmail.com>",
+		                        "Roman Pauer"])
 
 		#translators: These appear in the About dialog, usual format applies.
 		self.about.set_translator_credits( _("translator-credits") )
