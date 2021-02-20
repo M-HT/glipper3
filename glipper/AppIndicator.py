@@ -40,16 +40,27 @@ class AppIndicator(object):
 		try:
 			gi.require_version('XApp', '1.0')
 			from gi.repository import XApp
+			if not hasattr(XApp, 'StatusIcon'):
+				raise ValueError
 		except ValueError as ImportError:
 			try:
-				gi.require_version('AppIndicator3', '0.1')
-				from gi.repository import AppIndicator3
+				gi.require_version('AyatanaAppIndicator3', '0.1')
+				from gi.repository import AyatanaAppIndicator3
 			except ValueError as ImportError:
-				self._status_icon = StatusIcon()
-				self._status_icon.set_menu(self.menu)
+				try:
+					gi.require_version('AppIndicator3', '0.1')
+					from gi.repository import AppIndicator3
+				except ValueError as ImportError:
+					self._status_icon = StatusIcon()
+					self._status_icon.set_menu(self.menu)
+				else:
+					self._app_indicator = AppIndicator3.Indicator.new("glipper", "glipper", AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
+					self._app_indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
+					self._app_indicator.set_menu(self.menu)
+					self._app_indicator.set_title("Glipper")
 			else:
-				self._app_indicator = AppIndicator3.Indicator.new("glipper", "glipper", AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
-				self._app_indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
+				self._app_indicator = AyatanaAppIndicator3.Indicator.new("glipper", "glipper", AyatanaAppIndicator3.IndicatorCategory.APPLICATION_STATUS)
+				self._app_indicator.set_status(AyatanaAppIndicator3.IndicatorStatus.ACTIVE)
 				self._app_indicator.set_menu(self.menu)
 				self._app_indicator.set_title("Glipper")
 		else:
